@@ -1,0 +1,360 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Chinese (P.R.C.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+#ifdef _WIN32
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+#pragma code_page(936)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)\r\n"
+    "#ifdef _WIN32\r\n"
+    "LANGUAGE 4, 2\r\n"
+    "#pragma code_page(936)\r\n"
+    "#endif //_WIN32\r\n"
+    "#include ""res\\MVAnalyzer.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""l.chs\\afxres.rc""          // Standard components\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON    DISCARDABLE     "res\\MVAnalyzer.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOG DISCARDABLE  0, 0, 235, 55
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "关于 MVAnalyzer"
+FONT 9, "宋体"
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,11,17,20,20
+    LTEXT           "MVAnalyzer 1.0 版",IDC_STATIC,40,10,119,8,SS_NOPREFIX
+    LTEXT           "版权所有 (C) 2009",IDC_STATIC,40,25,119,8
+    DEFPUSHBUTTON   "确定",IDOK,178,7,50,14,WS_GROUP
+END
+
+IDD_MVANALYZER_DIALOG DIALOGEX 0, 0, 301, 192
+STYLE WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | 
+    WS_SYSMENU | WS_THICKFRAME
+EXSTYLE WS_EX_ACCEPTFILES | WS_EX_APPWINDOW
+CAPTION "MV-Analyzer"
+FONT 10, "Courier New"
+BEGIN
+    CONTROL         "",IDC_PLAYBACK_A,"Static",SS_LEFTNOWORDWRAP | SS_SUNKEN | 
+                    WS_BORDER | WS_GROUP,153,92,127,84
+    DEFPUSHBUTTON   "GO",IDC_PLAY,166,177,15,15,WS_GROUP,WS_EX_CLIENTEDGE
+    CONTROL         "Slider1",IDC_PROGRESS,"msctls_trackbar32",TBS_BOTH | 
+                    TBS_NOTICKS,0,181,111,11
+    CONTROL         "",IDC_PLAYBACK_B,"Static",SS_LEFTNOWORDWRAP | SS_SUNKEN | 
+                    WS_BORDER | WS_GROUP,153,2,127,88
+    CTEXT           "1/1",IDC_FRAME_NUM,113,182,32,10,SS_SUNKEN
+    PUSHBUTTON      "Set",IDC_SETTING,266,177,15,15,WS_GROUP | NOT 
+                    WS_TABSTOP,WS_EX_CLIENTEDGE
+    CONTROL         "MV",IDC_MV,"Button",BS_AUTOCHECKBOX,228,184,19,8
+    CONTROL         "Gd",IDC_GRID,"Button",BS_AUTOCHECKBOX,228,176,17,8
+    PUSHBUTTON      "YUV",IDC_YUV,212,177,15,15,NOT WS_TABSTOP,
+                    WS_EX_CLIENTEDGE
+    CONTROL         "",IDC_PLAYBACK_AA,"Static",SS_LEFTNOWORDWRAP | 
+                    WS_BORDER | WS_GROUP,25,97,82,74,WS_EX_ACCEPTFILES
+    CONTROL         "",IDC_PLAYBACK_BB,"Static",SS_LEFTNOWORDWRAP | 
+                    WS_BORDER | WS_GROUP,26,10,82,74,WS_EX_ACCEPTFILES
+    PUSHBUTTON      "^",IDC_PLAYBACK_BB_UP,26,0,82,10,BS_FLAT | NOT 
+                    WS_TABSTOP
+    PUSHBUTTON      "v",IDC_PLAYBACK_BB_DOWN,26,84,82,10,BS_FLAT | NOT 
+                    WS_TABSTOP
+    PUSHBUTTON      ">",IDC_PLAYBACK_BB_RIGHT,108,10,9,74,BS_FLAT | NOT 
+                    WS_TABSTOP
+    PUSHBUTTON      "<",IDC_PLAYBACK_BB_LEFT,17,10,9,74,BS_FLAT | NOT 
+                    WS_TABSTOP
+    PUSHBUTTON      "<",IDC_PREV,181,177,15,15,NOT WS_TABSTOP,
+                    WS_EX_CLIENTEDGE
+    PUSHBUTTON      ">",IDC_NEXT,196,177,15,15,NOT WS_TABSTOP,
+                    WS_EX_CLIENTEDGE
+    PUSHBUTTON      "F",IDC_FILE_OPEN,151,177,15,15,NOT WS_TABSTOP,
+                    WS_EX_CLIENTEDGE
+    CONTROL         "Sn",IDC_SIGN,"Button",BS_AUTOCHECKBOX,247,184,17,8
+    LTEXT           "最优SAD",IDC_STATIC_MINSAD,119,1,29,8
+    CTEXT           "OptSAD",IDC_OPT_SAD,119,10,29,8
+    LTEXT           "当前SAD",IDC_STATIC_CURRSAD,119,20,29,8
+    CTEXT           "CurrSAD",IDC_Curr_SAD,119,29,29,8
+    LTEXT           "差异",IDC_STATIC_SADDIFF,119,39,29,8
+    CTEXT           "Diff",IDC_SAD_DIFF,119,48,29,8
+    LTEXT           "当前块",IDC_STATIC_CURRBLK,120,63,29,8
+    CTEXT           "BX=",IDC_CURR_BLK_X,120,72,29,8
+    CTEXT           "BY=",IDC_CURR_BLK_Y,120,82,29,8
+END
+
+IDD_SETTING DIALOG DISCARDABLE  0, 0, 147, 69
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Setting"
+FONT 10, "System"
+BEGIN
+    DEFPUSHBUTTON   "Apply",IDOK,90,7,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,90,26,50,14
+    COMBOBOX        IDC_SIZE_LIST,27,22,52,48,CBS_DROPDOWN | WS_VSCROLL | 
+                    WS_TABSTOP
+    LTEXT           "Size:",IDC_STATIC,7,26,18,8
+    LTEXT           "Width:",IDC_STATIC,7,39,22,8
+    LTEXT           "Height:",IDC_STATIC,7,53,24,8
+    EDITTEXT        IDC_SIZE_WIDTH,37,36,41,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_SIZE_HEIGHT,37,50,41,12,ES_AUTOHSCROLL
+    LTEXT           "fps:",IDC_STATIC,7,11,13,8
+    COMBOBOX        IDC_FPS_LIST,27,7,34,66,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+END
+
+
+#ifndef _MAC
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "080404B0"
+        BEGIN
+            VALUE "CompanyName", "\0"
+            VALUE "FileDescription", "MVAnalyzer Microsoft 基础类应用程序\0"
+            VALUE "FileVersion", "1, 0, 0, 1\0"
+            VALUE "InternalName", "MVAnalyzer\0"
+            VALUE "LegalCopyright", "版权所有 (C) 2007\0"
+            VALUE "LegalTrademarks", "\0"
+            VALUE "OriginalFilename", "MVAnalyzer.EXE\0"
+            VALUE "ProductName", "MVAnalyzer 应用程序\0"
+            VALUE "ProductVersion", "1, 0, 0, 1\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x804, 1200
+    END
+END
+
+#endif    // !_MAC
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 228
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 48
+    END
+
+    IDD_MVANALYZER_DIALOG, DIALOG
+    BEGIN
+        VERTGUIDE, 11
+    END
+
+    IDD_SETTING, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 140
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 62
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog Info
+//
+
+IDD_SETTING DLGINIT
+BEGIN
+    IDC_SIZE_LIST, 0x403, 12, 0
+0x5151, 0x4943, 0x2d46, 0x3038, 0x3678, 0x0034, 
+    IDC_SIZE_LIST, 0x403, 12, 0
+0x5151, 0x4943, 0x2d46, 0x3838, 0x3778, 0x0032, 
+    IDC_SIZE_LIST, 0x403, 13, 0
+0x4351, 0x4649, 0x312d, 0x3637, 0x3178, 0x3434, "\000" 
+    IDC_SIZE_LIST, 0x403, 8, 0
+0x3631, 0x7830, 0x3231, 0x0030, 
+    IDC_SIZE_LIST, 0x403, 12, 0
+0x4943, 0x2d46, 0x3533, 0x7832, 0x3832, 0x0038, 
+    IDC_SIZE_LIST, 0x403, 8, 0
+0x3233, 0x7830, 0x3432, 0x0030, 
+    IDC_SIZE_LIST, 0x403, 8, 0
+0x3436, 0x7830, 0x3834, 0x0030, 
+    IDC_SIZE_LIST, 0x403, 8, 0
+0x3631, 0x7830, 0x3131, 0x0032, 
+    IDC_SIZE_LIST, 0x403, 8, 0
+0x3631, 0x7830, 0x3432, 0x0030, 
+    IDC_SIZE_LIST, 0x403, 8, 0
+0x3631, 0x7830, 0x3834, 0x0030, 
+    IDC_SIZE_LIST, 0x403, 8, 0
+0x3233, 0x7830, 0x3131, 0x0032, 
+    IDC_SIZE_LIST, 0x403, 8, 0
+0x3233, 0x7836, 0x3432, 0x0030, 
+    IDC_SIZE_LIST, 0x403, 8, 0
+0x3233, 0x7830, 0x3834, 0x0030, 
+    IDC_SIZE_LIST, 0x403, 8, 0
+0x3533, 0x7832, 0x3131, 0x0032, 
+    IDC_SIZE_LIST, 0x403, 8, 0
+0x3533, 0x7832, 0x3834, 0x0030, 
+    IDC_SIZE_LIST, 0x403, 8, 0
+0x3533, 0x7832, 0x3432, 0x0030, 
+    IDC_SIZE_LIST, 0x403, 8, 0
+0x3834, 0x7830, 0x3834, 0x0030, 
+    IDC_SIZE_LIST, 0x403, 8, 0
+0x3435, 0x7834, 0x3834, 0x0030, 
+    IDC_SIZE_LIST, 0x403, 8, 0
+0x3436, 0x7830, 0x3834, 0x0030, 
+    IDC_SIZE_LIST, 0x403, 8, 0
+0x3237, 0x7830, 0x3834, 0x0030, 
+    IDC_SIZE_LIST, 0x403, 12, 0
+0x4150, 0x2d4c, 0x3631, 0x7830, 0x3431, 0x0034, 
+    IDC_SIZE_LIST, 0x403, 8, 0
+0x3233, 0x7830, 0x3431, 0x0034, 
+    IDC_SIZE_LIST, 0x403, 8, 0
+0x3533, 0x7832, 0x3431, 0x0034, 
+    IDC_SIZE_LIST, 0x403, 8, 0
+0x3631, 0x7830, 0x3832, 0x0038, 
+    IDC_SIZE_LIST, 0x403, 8, 0
+0x3233, 0x7830, 0x3832, 0x0038, 
+    IDC_SIZE_LIST, 0x403, 8, 0
+0x3533, 0x7832, 0x3832, 0x0038, 
+    IDC_SIZE_LIST, 0x403, 8, 0
+0x3631, 0x7830, 0x3735, 0x0036, 
+    IDC_SIZE_LIST, 0x403, 8, 0
+0x3233, 0x7830, 0x3735, 0x0036, 
+    IDC_SIZE_LIST, 0x403, 8, 0
+0x3533, 0x7832, 0x3735, 0x0036, 
+    IDC_SIZE_LIST, 0x403, 8, 0
+0x3834, 0x7830, 0x3735, 0x0036, 
+    IDC_SIZE_LIST, 0x403, 8, 0
+0x3435, 0x7834, 0x3735, 0x0036, 
+    IDC_SIZE_LIST, 0x403, 8, 0
+0x3436, 0x7830, 0x3735, 0x0036, 
+    IDC_SIZE_LIST, 0x403, 8, 0
+0x3237, 0x7830, 0x3735, 0x0036, 
+    IDC_FPS_LIST, 0x403, 2, 0
+0x0031, 
+    IDC_FPS_LIST, 0x403, 2, 0
+0x0032, 
+    IDC_FPS_LIST, 0x403, 2, 0
+0x0035, 
+    IDC_FPS_LIST, 0x403, 3, 0
+0x3031, "\000" 
+    IDC_FPS_LIST, 0x403, 3, 0
+0x3531, "\000" 
+    IDC_FPS_LIST, 0x403, 3, 0
+0x3532, "\000" 
+    IDC_FPS_LIST, 0x403, 3, 0
+0x3033, "\000" 
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_ABOUTBOX            "关于 MVAnalyzer(&A)..."
+END
+
+#endif    // Chinese (P.R.C.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+#ifdef _WIN32
+LANGUAGE 4, 2
+#pragma code_page(936)
+#endif //_WIN32
+#include "res\MVAnalyzer.rc2"  // non-Microsoft Visual C++ edited resources
+#include "l.chs\afxres.rc"          // Standard components
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
