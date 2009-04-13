@@ -323,19 +323,12 @@ void CMVAnalyzerDlg::OnNext()
 		return;
 	}
 
-	char sFrameNumber[16];
-	sprintf( sFrameNumber, "%d/%d", iCurrFrameNumber+1, iTotalFrameNumber );
-	m_frame_num.SetWindowText(sFrameNumber);
-	m_progress.SetPos(iCurrFrameNumber);
+	SetTitle();
 
 	if (iCurrFrameNumber<iTotalFrameNumber) {
 		m_playback.GoToFrame(iCurrFrameNumber);
 		m_Reference.GoToFrame(iCurrFrameNumber-1);
 	}
-
-	Invalidate(true);
-
-	SetTitle();
 }
 
 void CMVAnalyzerDlg::OnPrev() 
@@ -347,17 +340,12 @@ void CMVAnalyzerDlg::OnPrev()
 		return;
 	}
 
-	char sFrameNumber[16];
-	sprintf( sFrameNumber, "%d/%d", iCurrFrameNumber+1, iTotalFrameNumber );
-	m_frame_num.SetWindowText(sFrameNumber);
-	m_progress.SetPos(iCurrFrameNumber);
+	SetTitle();
 
 	if (iCurrFrameNumber<=iTotalFrameNumber-1) {
 		m_playback.GoToFrame(iCurrFrameNumber);
 		m_Reference.GoToFrame(iCurrFrameNumber-1);
 	}
-
-	SetTitle();
 }
 
 void CMVAnalyzerDlg::OnReleasedcaptureProgress(NMHDR* pNMHDR, LRESULT* pResult) 
@@ -365,9 +353,7 @@ void CMVAnalyzerDlg::OnReleasedcaptureProgress(NMHDR* pNMHDR, LRESULT* pResult)
 	// TODO: Add your control notification handler code here
 	iCurrFrameNumber = m_progress.GetPos();
 
-	char sFrameNumber[16];
-	sprintf( sFrameNumber, "%d/%d", iCurrFrameNumber+1, iTotalFrameNumber );
-	m_frame_num.SetWindowText(sFrameNumber);
+	SetTitle();
 
 	m_playback.GoToFrame(iCurrFrameNumber);
 	m_Reference.GoToFrame(iCurrFrameNumber-1);
@@ -472,10 +458,7 @@ void CMVAnalyzerDlg::OnTimer(UINT nIDEvent)
 	// TODO: Add your message handler code here and/or call default
 	if (nIDEvent == playback_timer) {
 
-		char sFrameNumber[16];
-		sprintf( sFrameNumber, "%d/%d", iCurrFrameNumber+1, iTotalFrameNumber );
-		m_frame_num.SetWindowText(sFrameNumber);
-		m_progress.SetPos(iCurrFrameNumber);
+		SetTitle();
 
 		if (iCurrFrameNumber>=0 && iCurrFrameNumber<iTotalFrameNumber) {
 			m_playback.GoToFrame(iCurrFrameNumber);
@@ -486,6 +469,7 @@ void CMVAnalyzerDlg::OnTimer(UINT nIDEvent)
 		if (iCurrFrameNumber<0 || iCurrFrameNumber>=iTotalFrameNumber) {
 			OnPlay();
 			iCurrFrameNumber = 0;
+			SetTitle();
 			return;
 		}
 	} else if (nIDEvent == playback_blink_timer) {
@@ -534,12 +518,9 @@ void CMVAnalyzerDlg::ReStart()
 	iTotalFrameNumber = m_playback.ReStart();
 	iTotalFrameNumber = m_Reference.ReStart();
 
-	char sFrameNumber[16];
-	sprintf( sFrameNumber, "%d/%d", iCurrFrameNumber+1, iTotalFrameNumber );
-	m_frame_num.SetWindowText(sFrameNumber);
-	m_progress.SetRange(0, iTotalFrameNumber-1);
 	iCurrFrameNumber = 0;
-	m_progress.SetPos(iCurrFrameNumber);
+	m_progress.SetRange(0, iTotalFrameNumber-1);
+	SetTitle();
 
 	Invalidate(TRUE);
 }
@@ -676,8 +657,13 @@ void CMVAnalyzerDlg::OnLButtonDblClk(UINT nFlags, CPoint point)
 void CMVAnalyzerDlg::SetTitle()
 {
 	char sTitle[256];
-	sprintf(sTitle, "MV-Analyzer::%s--[%d-%d]", m_playback.GetFileName(), iTotalFrameNumber, iCurrFrameNumber);
+	sprintf(sTitle, "MV-Analyzer::%s--[%d/%d]", m_playback.GetFileName(), iCurrFrameNumber, iTotalFrameNumber);
 	SetWindowText(sTitle);
+
+	char sFrameNumber[16];
+	sprintf( sFrameNumber, "%d/%d", iCurrFrameNumber, iTotalFrameNumber );
+	m_frame_num.SetWindowText(sFrameNumber);
+	m_progress.SetPos(iCurrFrameNumber);
 
 	sprintf(sTitle, "BX=%d", m_playback.QMB_bx);
 	m_bx.SetWindowText(sTitle);
