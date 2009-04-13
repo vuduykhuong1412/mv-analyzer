@@ -386,11 +386,11 @@ void CMVPlayback::GoToFrame(int number)
 		return;
 
 	iCurrFrameNumber = number;
-	if (iCurrFrameNumber >= iTotalFrameNumber-1 || iCurrFrameNumber < 0) {
+	if (iCurrFrameNumber >= iTotalFrameNumber || iCurrFrameNumber < 0) {
 		iCurrFrameNumber = -1;
 	}
 
-	if (iCurrFrameNumber >=0 && iCurrFrameNumber <= iTotalFrameNumber-1 ) {
+	if (iCurrFrameNumber >=0 && iCurrFrameNumber < iTotalFrameNumber ) {
 		m_pFile->Seek(iCurrFrameNumber*iWidth*iHeight*3/2, CFile::begin);
 		// Read the Y Cb Cr data
 		GetYUVData();
