@@ -56,16 +56,16 @@ CMVPlayback::CMVPlayback()
 
 CMVPlayback::~CMVPlayback()
 {
-	free(Y);
-	free(Cb);
-	free(Cr);
-	free(RGBbuf);
-	free(QMB);
-
-	delete BmpInfo;
+	if (winID==0) {
+		free(Y);
+		free(Cb);
+		free(Cr);
+		free(RGBbuf);
+		free(QMB);
+		delete pMVFile;
+	}
 	delete m_pFile;
-
-	delete pMVFile;
+	delete BmpInfo;
 }
 
 BEGIN_MESSAGE_MAP(CMVPlayback, CStatic)
@@ -324,36 +324,44 @@ void CMVPlayback::SetYUVSize(int width, int height)
 	CenterX = width >> 1;
 	CenterY = height >> 1;
 
-	if (Y!=NULL) free(Y);
-	if (Cb!=NULL) free(Cb);
-	if (Cr!=NULL) free(Cr);
-	if (RGBbuf!=NULL) free(RGBbuf);
-	if (QMB!=NULL) free(QMB);
+	if (winID != 0) {
+		Y = pDlg->m_playback.Y;
+		Cb = pDlg->m_playback.Cb;
+		Cr = pDlg->m_playback.Cr;
+		RGBbuf = pDlg->m_playback.RGBbuf;
+		QMB = pDlg->m_playback.QMB;
+	} else {
+		if (Y!=NULL) free(Y);
+		if (Cb!=NULL) free(Cb);
+		if (Cr!=NULL) free(Cr);
+		if (RGBbuf!=NULL) free(RGBbuf);
+		if (QMB!=NULL) free(QMB);
 
-	if ( (Y =(unsigned char *)malloc(iWidth*iHeight)) == NULL ) 
-	{
-		//AfxMessageBox("Couldn't allocate memory for RGBbuf\n");
-		return;
-	}
-	if ( (Cb=(unsigned char *)malloc(iWidth*iHeight/4)) == NULL ) 
-	{
-		//AfxMessageBox("Couldn't allocate memory for RGBbuf\n");
-		return;
-	}
-	if ( (Cr=(unsigned char *)malloc(iWidth*iHeight/4) ) == NULL ) 
-	{
-		//AfxMessageBox("Couldn't allocate memory for RGBbuf\n");
-		return;
-	}
-	if ( (RGBbuf=(unsigned char *)malloc(iWidth*iHeight*3)) == NULL ) 
-	{
-		//AfxMessageBox("Couldn't allocate memory for RGBbuf\n");
-		return;
-	}
-	if ( (QMB=(CMBData *)malloc(((iWidth+8)/MB_SIZE)*((iHeight+8)/MB_SIZE)*sizeof(CMBData))) == NULL ) 
-	{
-		//AfxMessageBox("Couldn't allocate memory for RGBbuf\n");
-		return;
+		if ( (Y =(unsigned char *)malloc(iWidth*iHeight)) == NULL ) 
+		{
+			//AfxMessageBox("Couldn't allocate memory for RGBbuf\n");
+			return;
+		}
+		if ( (Cb=(unsigned char *)malloc(iWidth*iHeight/4)) == NULL ) 
+		{
+			//AfxMessageBox("Couldn't allocate memory for RGBbuf\n");
+			return;
+		}
+		if ( (Cr=(unsigned char *)malloc(iWidth*iHeight/4) ) == NULL ) 
+		{
+			//AfxMessageBox("Couldn't allocate memory for RGBbuf\n");
+			return;
+		}
+		if ( (RGBbuf=(unsigned char *)malloc(iWidth*iHeight*3)) == NULL ) 
+		{
+			//AfxMessageBox("Couldn't allocate memory for RGBbuf\n");
+			return;
+		}
+		if ( (QMB=(CMBData *)malloc(((iWidth+8)/MB_SIZE)*((iHeight+8)/MB_SIZE)*sizeof(CMBData))) == NULL ) 
+		{
+			//AfxMessageBox("Couldn't allocate memory for RGBbuf\n");
+			return;
+		}
 	}
 }
 
@@ -367,20 +375,28 @@ int CMVPlayback::ReStart()
 
 //	if ( bHaveFile == FALSE )
 //		return 0;
-	if (bHaveFile) {
+	if (bHaveFile && winID==0) {
 		m_pFile->Close();
 		pMVFile->Clear();
 		delete pMVFile;
 	}
 
-	if(!m_pFile->Open(sPathName, CFile::modeRead | CFile::typeBinary | CFile::shareDenyNone )) 
-	{
-		//AfxMessageBox("Can't open input file");
-		return 0;
+	if (winID != 0) {
+		m_pFile = pDlg->m_playback.m_pFile;
+	} else {
+		if(!m_pFile->Open(sPathName, CFile::modeRead | CFile::typeBinary | CFile::shareDenyNone )) {
+			//AfxMessageBox("Can't open input file");
+			return 0;
+		}
 	}
 	iTotalFrameNumber = m_pFile->GetLength() / (iWidth*iHeight*3/2);
-	pMVFile = new TiXmlDocument( sMVPathName );
-	pMVFile->LoadFile();
+
+	if (winID != 0) {
+		pMVFile = pDlg->m_playback.pMVFile;
+	} else {
+		pMVFile = new TiXmlDocument( sMVPathName );
+		pMVFile->LoadFile();
+	}
 
 	GetYUVData();
 

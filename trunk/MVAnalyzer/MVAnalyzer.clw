@@ -13,9 +13,9 @@ Class2=CMVAnalyzerDlg
 Class3=CAboutDlg
 
 ResourceCount=4
-Resource1=IDD_MVANALYZER_DIALOG
+Resource1=IDD_ABOUTBOX
 Resource2=IDR_MAINFRAME
-Resource3=IDD_ABOUTBOX
+Resource3=IDD_MVANALYZER_DIALOG
 Resource4=IDD_SETTING
 
 [CLS:CMVAnalyzerApp]
@@ -29,7 +29,7 @@ Type=0
 HeaderFile=MVAnalyzerDlg.h
 ImplementationFile=MVAnalyzerDlg.cpp
 Filter=D
-LastObject=IDC_MV_SCALE
+LastObject=IDC_PLAYBACK_LARGE
 BaseClass=cdxCSizingDialog
 VirtualFilter=dWC
 
@@ -52,7 +52,7 @@ Control4=IDOK,button,1342373889
 [DLG:IDD_MVANALYZER_DIALOG]
 Type=1
 Class=CMVAnalyzerDlg
-ControlCount=30
+ControlCount=31
 Control1=IDC_PLAYBACK_A,static,1350701068
 Control2=IDC_PLAY,button,1342373889
 Control3=IDC_PROGRESS,msctls_trackbar32,1342177304
@@ -83,6 +83,7 @@ Control27=IDC_CURR_BLK_X,static,1342308353
 Control28=IDC_CURR_BLK_Y,static,1342308353
 Control29=IDC_MV_SCALE,button,1342308352
 Control30=IDC_FULL_SCREEN,button,1342308352
+Control31=IDC_PLAYBACK_LARGE,static,1350701068
 
 [DLG:IDD_SETTING]
 Type=1

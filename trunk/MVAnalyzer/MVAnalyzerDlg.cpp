@@ -82,8 +82,10 @@ CMVAnalyzerDlg::CMVAnalyzerDlg(CWnd* pParent /*=NULL*/)
 	bPlay = FALSE;
 	bYUV = YUV;
 	MVScaleFactor = 1.0;
+	bFullScreen = FALSE;
 
 	m_playback.SetColorful(bYUV);
+	m_playback_large.SetColorful(bYUV);
 	m_Reference.SetColorful(bYUV);
 	iWidth = 352; iHeight = 288;
 	iCurrFrameNumber = 0;
@@ -93,6 +95,7 @@ CMVAnalyzerDlg::CMVAnalyzerDlg(CWnd* pParent /*=NULL*/)
 	IsDraging = FALSE;
 
 	m_playback.pDlg = this;
+	m_playback_large.pDlg = this;
 	m_FocusArea.pDlg = this;
 	m_FocusRef.pDlg = this;
 
@@ -103,6 +106,7 @@ void CMVAnalyzerDlg::DoDataExchange(CDataExchange* pDX)
 {
 	cdxCSizingDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CMVAnalyzerDlg)
+	DDX_Control(pDX, IDC_PLAYBACK_LARGE, m_playback_large);
 	DDX_Control(pDX, IDC_FULL_SCREEN, m_fullscreen);
 	DDX_Control(pDX, IDC_MV_SCALE, m_MVscale);
 	DDX_Control(pDX, IDC_STATIC_SADDIFF, m_static_SADdiff);
@@ -163,6 +167,7 @@ BEGIN_MESSAGE_MAP(CMVAnalyzerDlg, cdxCSizingDialog)
 	ON_WM_LBUTTONDBLCLK()
 	ON_BN_CLICKED(IDC_FILE_OPEN, OnFileOpen)
 	ON_BN_CLICKED(IDC_MV_SCALE, OnMVScale)
+	ON_BN_CLICKED(IDC_FULL_SCREEN, OnFullScreen)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -197,14 +202,17 @@ BOOL CMVAnalyzerDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	// TODO: Add extra initialization here
+	m_playback.winID = 0;
+	m_playback_large.winID = 1;
 	AddSzControlEx(m_playback, 50, 100, 50, 100); m_playback.ShowWindow(SW_SHOWNORMAL);
+	AddSzControlEx(m_playback_large, 0, 100, 0, 100); m_playback_large.ShowWindow(SW_HIDE);
 	AddSzControlEx(m_Reference, 50, 100, 0, 50); m_Reference.ShowWindow(SW_SHOWNORMAL);
 	AddSzControlEx(m_FocusArea, 0, 50, 50, 100); m_FocusArea.ShowWindow(SW_SHOWNORMAL);
 	AddSzControlEx(m_FocusRef, 0, 50, 0, 50); m_FocusRef.ShowWindow(SW_SHOWNORMAL);
-	AddSzControlEx(m_playbackBBUp, 0, 50, 0, 0);
-	AddSzControlEx(m_playbackBBDown, 0, 50, 50, 50);
-	AddSzControlEx(m_playbackBBLeft, 0, 0, 0, 50);
-	AddSzControlEx(m_playbackBBRight, 50, 50, 0, 50);
+	AddSzControlEx(m_playbackBBUp, 0, 50, 0, 0); m_playbackBBUp.ShowWindow(SW_HIDE);
+	AddSzControlEx(m_playbackBBDown, 0, 50, 50, 50); m_playbackBBDown.ShowWindow(SW_HIDE);
+	AddSzControlEx(m_playbackBBLeft, 0, 0, 0, 50); m_playbackBBLeft.ShowWindow(SW_HIDE);
+	AddSzControlEx(m_playbackBBRight, 50, 50, 0, 50); m_playbackBBRight.ShowWindow(SW_HIDE);
 	AddSzControl(m_file_open, mdRepos, mdRepos);
 	AddSzControl(m_play_pause, mdRepos, mdRepos);	m_play_pause.SetWindowText("GO");
 	AddSzControl(m_prev, mdRepos, mdRepos);
@@ -304,6 +312,7 @@ void CMVAnalyzerDlg::OpenFileA()
 
 	// get pathname & filename
 	m_playback.SetPathName(sPathName);
+	m_playback_large.SetPathName(sPathName);
 	////AfxMessageBox(sFileNameA, MB_OK);
 
 	CFile *pFile = new CFile();
@@ -334,6 +343,7 @@ void CMVAnalyzerDlg::OnNext()
 
 	if (iCurrFrameNumber<iTotalFrameNumber) {
 		m_playback.GoToFrame(iCurrFrameNumber);
+		m_playback_large.SetPathName(sPathName);
 		m_Reference.GoToFrame(iCurrFrameNumber-1);
 	}
 }
@@ -351,6 +361,7 @@ void CMVAnalyzerDlg::OnPrev()
 
 	if (iCurrFrameNumber<=iTotalFrameNumber-1) {
 		m_playback.GoToFrame(iCurrFrameNumber);
+		m_playback_large.GoToFrame(iCurrFrameNumber);
 		m_Reference.GoToFrame(iCurrFrameNumber-1);
 	}
 }
@@ -363,6 +374,7 @@ void CMVAnalyzerDlg::OnReleasedcaptureProgress(NMHDR* pNMHDR, LRESULT* pResult)
 	SetTitle();
 
 	m_playback.GoToFrame(iCurrFrameNumber);
+	m_playback_large.GoToFrame(iCurrFrameNumber);
 	m_Reference.GoToFrame(iCurrFrameNumber-1);
 
 	Invalidate(TRUE);
@@ -412,9 +424,11 @@ BOOL CMVAnalyzerDlg::PreTranslateMessage(MSG* pMsg)
 			break;
 		case 33: // page up
 			m_playback.PrevQMB();
+			m_playback_large.PrevQMB();
 			break;
 		case 34: // page down
 			m_playback.NextQMB();
+			m_playback_large.NextQMB();
 			break;
 		case 81: // 'q'
 			m_FocusArea.NextMV();
@@ -438,6 +452,7 @@ BOOL CMVAnalyzerDlg::PreTranslateMessage(MSG* pMsg)
 //		if (pMsg->hwnd == m_playback) {
 			DragQueryFile(HDROP(pMsg->wParam), 0, sPathName, 128);
 			m_playback.SetPathName(sPathName);
+			m_playback_large.SetPathName(sPathName);
 			m_Reference.SetPathName(sPathName);
 			CFile *pFile = new CFile();
 			if(!pFile->Open(sPathName, CFile::modeRead | CFile::typeBinary | CFile::shareDenyNone )) 
@@ -468,6 +483,7 @@ void CMVAnalyzerDlg::OnTimer(UINT nIDEvent)
 
 		if (iCurrFrameNumber>=0 && iCurrFrameNumber<iTotalFrameNumber) {
 			m_playback.GoToFrame(iCurrFrameNumber);
+			m_playback_large.GoToFrame(iCurrFrameNumber);
 			m_Reference.GoToFrame(iCurrFrameNumber-1);
 		}
 
@@ -481,7 +497,9 @@ void CMVAnalyzerDlg::OnTimer(UINT nIDEvent)
 		}
 	} else if (nIDEvent == playback_blink_timer) {
 		m_playback.bBlink = (m_playback.bBlink+1)%2;
+		m_playback_large.bBlink = (m_playback_large.bBlink+1)%2;
 		m_playback.Invalidate(FALSE);
+		m_playback_large.Invalidate(FALSE);
 	} else if (nIDEvent == focusarea_blink_timer) {
 		m_FocusArea.bBlink = (m_FocusArea.bBlink+1)%2;
 		m_FocusArea.Invalidate(FALSE);
@@ -521,8 +539,10 @@ void CMVAnalyzerDlg::ReStart()
 	m_play_pause.SetWindowText("GO");
 
 	m_playback.SetYUVSize(iWidth, iHeight);
+	m_playback_large.SetYUVSize(iWidth, iHeight);
 	m_Reference.SetYUVSize(iWidth, iHeight);
 	iTotalFrameNumber = m_playback.ReStart();
+	iTotalFrameNumber = m_playback_large.ReStart();
 	iTotalFrameNumber = m_Reference.ReStart();
 
 	iCurrFrameNumber = 0;
@@ -537,6 +557,7 @@ void CMVAnalyzerDlg::OnMV()
 	// TODO: Add your control notification handler code here
 	UpdateData(TRUE);
 	m_playback.SetShowMV( m_bMV.GetState()&0x0003 );
+	m_playback_large.SetShowMV( m_bMV.GetState()&0x0003 );
 	Invalidate(TRUE);
 }
 
@@ -547,21 +568,25 @@ void CMVAnalyzerDlg::OnYUV()
 		bYUV = YY;
 		m_YUV.SetWindowText("Y");
 		m_playback.SetColorful( bYUV );
+		m_playback_large.SetColorful( bYUV );
 		m_Reference.SetColorful( bYUV );
 	} else if ( bYUV == YY ) {
 		bYUV = LG;
 		m_YUV.SetWindowText("LG");
 		m_playback.SetColorful( bYUV );
+		m_playback_large.SetColorful( bYUV );
 		m_Reference.SetColorful( YY );
 	} else if ( bYUV == LG ) {
 		bYUV = ND;
 		m_YUV.SetWindowText("ND");
 		m_playback.SetColorful( bYUV );
+		m_playback_large.SetColorful( bYUV );
 		m_Reference.SetColorful( YUV );
 	} else if ( bYUV == ND ) {
 		bYUV = YUV;
 		m_YUV.SetWindowText("YUV");
 		m_playback.SetColorful( bYUV );
+		m_playback_large.SetColorful( bYUV );
 		m_Reference.SetColorful( bYUV );
 	}
 
@@ -573,6 +598,7 @@ void CMVAnalyzerDlg::OnGrid()
 	// TODO: Add your control notification handler code here
 	UpdateData(TRUE);
 	m_playback.SetShowGrid( m_grid.GetState()&0x0003 );
+	m_playback_large.SetShowGrid( m_grid.GetState()&0x0003 );
 	Invalidate(TRUE);
 }
 
@@ -581,6 +607,7 @@ void CMVAnalyzerDlg::OnSign()
 	// TODO: Add your control notification handler code here
 	UpdateData(TRUE);
 	m_playback.SetShowSign( m_sign.GetState()&0x0003 );
+	m_playback_large.SetShowSign( m_sign.GetState()&0x0003 );
 	Invalidate(TRUE);
 }
 
@@ -589,9 +616,11 @@ BOOL CMVAnalyzerDlg::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 	// TODO: Add your message handler code here and/or call default
 	if (zDelta>0) {
 		m_playback.ZoomIn();
+		m_playback_large.ZoomIn();
 		m_Reference.ZoomIn();
 	} else {
 		m_playback.ZoomOut();
+		m_playback_large.ZoomOut();
 		m_Reference.ZoomOut();
 	}
 
@@ -604,6 +633,7 @@ void CMVAnalyzerDlg::OnLButtonDown(UINT nFlags, CPoint point)
 	IsDraging = TRUE;
 	DragPntStart = point;
 	m_playback.DragStart();
+	m_playback_large.DragStart();
 	m_Reference.DragStart();
 
 	cdxCSizingDialog::OnLButtonDown(nFlags, point);
@@ -624,6 +654,7 @@ void CMVAnalyzerDlg::OnMouseMove(UINT nFlags, CPoint point)
 	if (IsDraging) {
 		move = point - DragPntStart;
 		m_playback.Drag(move.cx, move.cy);
+		m_playback_large.Drag(move.cx, move.cy);
 		m_Reference.Drag(move.cx, move.cy);
 	}
 	
@@ -654,9 +685,19 @@ void CMVAnalyzerDlg::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
 	// TODO: Add your message handler code here and/or call default
 	CRect   rect;
-	m_playback.GetWindowRect(&rect);
-	ScreenToClient(&rect);
-	m_playback.SelectQMB(point.x-rect.left, point.y-rect.top);
+	if (bFullScreen) {
+		m_playback_large.GetWindowRect(&rect);
+		ScreenToClient(&rect);
+		m_playback_large.SelectQMB(point.x-rect.left, point.y-rect.top);
+		m_playback.QMB_bx = m_playback_large.QMB_bx;
+		m_playback.QMB_by = m_playback_large.QMB_by;
+	} else {
+		m_playback.GetWindowRect(&rect);
+		ScreenToClient(&rect);
+		m_playback.SelectQMB(point.x-rect.left, point.y-rect.top);
+		m_playback_large.QMB_bx = m_playback.QMB_bx;
+		m_playback_large.QMB_by = m_playback.QMB_by;
+	}
 	
 	cdxCSizingDialog::OnLButtonDblClk(nFlags, point);
 }
@@ -692,6 +733,7 @@ void CMVAnalyzerDlg::OnFileOpen()
 	
 	// get pathname & filename
 	m_playback.SetPathName(sPathName);
+	m_playback_large.SetPathName(sPathName);
 	m_Reference.SetPathName(sPathName);
 	CFile *pFile = new CFile();
 	if(!pFile->Open(sPathName, CFile::modeRead | CFile::typeBinary | CFile::shareDenyNone )) 
@@ -723,4 +765,47 @@ void CMVAnalyzerDlg::OnMVScale()
 		m_MVscale.SetWindowText("x1");
 	}
 	m_playback.MVScale(MVScaleFactor);
+	m_playback_large.MVScale(MVScaleFactor);
+}
+
+void CMVAnalyzerDlg::OnFullScreen() 
+{
+	// TODO: Add your control notification handler code here
+	if (bFullScreen == FALSE) {
+		bFullScreen = TRUE;
+		m_fullscreen.SetWindowText("N");
+
+		m_playback_large.ShowWindow(SW_SHOWNORMAL);
+		m_playback.ShowWindow(SW_HIDE);
+		m_Reference.ShowWindow(SW_HIDE);
+		m_FocusArea.ShowWindow(SW_HIDE);
+		m_FocusRef.ShowWindow(SW_HIDE);
+		m_optSAD.ShowWindow(SW_HIDE);
+		m_static_minSAD.ShowWindow(SW_HIDE);
+		m_currSAD.ShowWindow(SW_HIDE);
+		m_static_currSAD.ShowWindow(SW_HIDE);
+		m_SADdiff.ShowWindow(SW_HIDE);
+		m_static_SADdiff.ShowWindow(SW_HIDE);
+		m_bx.ShowWindow(SW_HIDE);
+		m_by.ShowWindow(SW_HIDE);
+		m_static_currBLK.ShowWindow(SW_HIDE);
+	} else {
+		bFullScreen = FALSE;
+		m_fullscreen.SetWindowText("F");
+
+		m_playback_large.ShowWindow(SW_HIDE);
+		m_playback.ShowWindow(SW_SHOWNORMAL);
+		m_Reference.ShowWindow(SW_SHOWNORMAL);
+		m_FocusArea.ShowWindow(SW_SHOWNORMAL);
+		m_FocusRef.ShowWindow(SW_SHOWNORMAL);
+		m_optSAD.ShowWindow(SW_SHOWNORMAL);
+		m_static_minSAD.ShowWindow(SW_SHOWNORMAL);
+		m_currSAD.ShowWindow(SW_SHOWNORMAL);
+		m_static_currSAD.ShowWindow(SW_SHOWNORMAL);
+		m_SADdiff.ShowWindow(SW_SHOWNORMAL);
+		m_static_SADdiff.ShowWindow(SW_SHOWNORMAL);
+		m_bx.ShowWindow(SW_SHOWNORMAL);
+		m_by.ShowWindow(SW_SHOWNORMAL);
+		m_static_currBLK.ShowWindow(SW_SHOWNORMAL);
+	}
 }
