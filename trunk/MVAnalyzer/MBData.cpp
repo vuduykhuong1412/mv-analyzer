@@ -206,6 +206,24 @@ int CMBData::GetTotalSubMB()
 		vsb[tsb].rbx = 8; vsb[tsb].rby = 8;
 		CalulateV( &mv );
 		break;
+	case I4x4:
+		for (i=0; i<16; i++) {
+			tsb += 1;
+			vsb[tsb].w = 4; vsb[tsb].h = 4;
+			vsb[tsb].cx = -6+(i%4)*4; vsb[tsb].cy = -6+(i/4)*4;
+			vsb[tsb].ltx = vsb[tsb].cx-2; vsb[tsb].lty = vsb[tsb].cy-2;
+			vsb[tsb].rbx = vsb[tsb].cx+2; vsb[tsb].rby = vsb[tsb].cy+2;
+			CalulateV( &mv );
+		}
+		break;
+	case BSKIP:
+		tsb += 1;
+		vsb[tsb].w = 16; vsb[tsb].h = 16;
+		vsb[tsb].cx = 0; vsb[tsb].cy = 0;
+		vsb[tsb].ltx = -8; vsb[tsb].lty = -8;
+		vsb[tsb].rbx = 8; vsb[tsb].rby = 8;
+		CalulateV( &mv );
+		break;
 	default:
 		break;
 	}
