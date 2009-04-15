@@ -158,6 +158,7 @@ BEGIN_MESSAGE_MAP(CMVAnalyzerDlg, cdxCSizingDialog)
 	ON_BN_CLICKED(IDC_PLAYBACK_BB_RIGHT, OnPlaybackBbRight)
 	ON_BN_CLICKED(IDC_SIGN, OnSign)
 	ON_WM_LBUTTONDBLCLK()
+	ON_BN_CLICKED(IDC_FILE_OPEN, OnFileOpen)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -669,4 +670,35 @@ void CMVAnalyzerDlg::SetTitle()
 	m_bx.SetWindowText(sTitle);
 	sprintf(sTitle, "BY=%d", m_playback.QMB_by);
 	m_by.SetWindowText(sTitle);
+}
+
+void CMVAnalyzerDlg::OnFileOpen() 
+{
+	// TODO: Add your control notification handler code here
+	CFileDialog fdlg(TRUE, ".", "",OFN_HIDEREADONLY|OFN_OVERWRITEPROMPT,TEXT("YUV File(*.yuv)|*.yuv|All File(*.*)|*.*||")); 
+	CString strCurrentPath,strMsg;
+	GetCurrentDirectory(200,strCurrentPath.GetBuffer(200));
+	strCurrentPath.ReleaseBuffer();
+	fdlg.m_ofn.lpstrInitialDir=strCurrentPath; //这里就设置了对话框的默认目录为strCurrentPath
+	if ( fdlg.DoModal()!=IDOK ) return;
+	CString sFileName = fdlg.GetPathName(); //获取文件的绝对路径
+	strcpy(sPathName, sFileName.GetBuffer(1024));
+	
+	// get pathname & filename
+	m_playback.SetPathName(sPathName);
+	m_Reference.SetPathName(sPathName);
+	CFile *pFile = new CFile();
+	if(!pFile->Open(sPathName, CFile::modeRead | CFile::typeBinary | CFile::shareDenyNone )) 
+	{
+		//AfxMessageBox("Can't open input file");
+		delete pFile;
+		return;
+	}
+	iTotalFrameNumber = pFile->GetLength() / (iWidth*iHeight*3/2);
+	iCurrFrameNumber = 0;
+	pFile->Close();
+	delete pFile;
+
+	ReStart();
+	SetTitle();
 }

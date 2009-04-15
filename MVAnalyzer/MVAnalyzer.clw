@@ -29,7 +29,7 @@ Type=0
 HeaderFile=MVAnalyzerDlg.h
 ImplementationFile=MVAnalyzerDlg.cpp
 Filter=D
-LastObject=IDC_GRID
+LastObject=IDC_FILE_OPEN
 BaseClass=cdxCSizingDialog
 VirtualFilter=dWC
 

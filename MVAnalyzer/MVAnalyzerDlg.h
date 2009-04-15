@@ -116,6 +116,7 @@ protected:
 	afx_msg void OnPlaybackBbRight();
 	afx_msg void OnSign();
 	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
+	afx_msg void OnFileOpen();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 private:
