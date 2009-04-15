@@ -21,7 +21,9 @@
 #define IDC_PSNR                        1013
 #define IDC_SETTING                     1015
 #define IDC_SINGLE_DUAL                 1016
+#define IDC_MV_SCALE                    1016
 #define IDC_PLAYBACK_B                  1017
+#define IDC_FULL_SCREEN                 1018
 #define IDC_SIZE_LIST                   1022
 #define IDC_SIZE_WIDTH                  1023
 #define IDC_SIZE_HEIGHT                 1024

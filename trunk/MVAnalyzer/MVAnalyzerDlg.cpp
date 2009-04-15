@@ -81,6 +81,7 @@ CMVAnalyzerDlg::CMVAnalyzerDlg(CWnd* pParent /*=NULL*/)
 
 	bPlay = FALSE;
 	bYUV = YUV;
+	MVScaleFactor = 1.0;
 
 	m_playback.SetColorful(bYUV);
 	m_Reference.SetColorful(bYUV);
@@ -102,6 +103,8 @@ void CMVAnalyzerDlg::DoDataExchange(CDataExchange* pDX)
 {
 	cdxCSizingDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CMVAnalyzerDlg)
+	DDX_Control(pDX, IDC_FULL_SCREEN, m_fullscreen);
+	DDX_Control(pDX, IDC_MV_SCALE, m_MVscale);
 	DDX_Control(pDX, IDC_STATIC_SADDIFF, m_static_SADdiff);
 	DDX_Control(pDX, IDC_STATIC_CURRBLK, m_static_currBLK);
 	DDX_Control(pDX, IDC_STATIC_CURRSAD, m_static_currSAD);
@@ -159,6 +162,7 @@ BEGIN_MESSAGE_MAP(CMVAnalyzerDlg, cdxCSizingDialog)
 	ON_BN_CLICKED(IDC_SIGN, OnSign)
 	ON_WM_LBUTTONDBLCLK()
 	ON_BN_CLICKED(IDC_FILE_OPEN, OnFileOpen)
+	ON_BN_CLICKED(IDC_MV_SCALE, OnMVScale)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -210,6 +214,8 @@ BOOL CMVAnalyzerDlg::OnInitDialog()
 	AddSzControl(m_bMV, mdRepos, mdRepos);
 	AddSzControl(m_sign, mdRepos, mdRepos);
 	AddSzControl(m_setting, mdRepos, mdRepos);
+	AddSzControl(m_MVscale, mdRepos, mdRepos);
+	AddSzControl(m_fullscreen, mdRepos, mdRepos);
 	AddSzControlEx(m_progress, 0, 50, 100, 100);	m_progress.SetRange(0, iTotalFrameNumber-1);
 	AddSzControlEx(m_frame_num, 50, 50, 100, 100);
 
@@ -701,4 +707,20 @@ void CMVAnalyzerDlg::OnFileOpen()
 
 	ReStart();
 	SetTitle();
+}
+
+void CMVAnalyzerDlg::OnMVScale() 
+{
+	// TODO: Add your control notification handler code here
+	if (MVScaleFactor == 1.0) {
+		MVScaleFactor = 2.0;
+		m_MVscale.SetWindowText("x2");
+	} else if (MVScaleFactor == 2.0) {
+		MVScaleFactor = 0.5;
+		m_MVscale.SetWindowText("/2");
+	} else if (MVScaleFactor == 0.5) {
+		MVScaleFactor = 1.0;
+		m_MVscale.SetWindowText("x1");
+	}
+	m_playback.MVScale(MVScaleFactor);
 }

@@ -50,6 +50,8 @@ CMVPlayback::CMVPlayback()
 
 	bBlink = 1;
 	pMVFile = NULL;
+
+	MVScaleFactor = 1.0;
 }
 
 CMVPlayback::~CMVPlayback()
@@ -166,9 +168,15 @@ void CMVPlayback::ZoomOut()
 {
 	ZoomFactor /= 1.1;
 	if (ZoomFactor == 1) return;
-	if (ZoomFactor < 1) { ZoomFactor = 1; }
-
-	ReCalulateShowParam();
+	if (ZoomFactor < 1) {
+		ZoomFactor = 1;
+		x_left = 0; x_right = iWidth-1; CenterX = (x_right-x_left)/2;
+		y_top = 0; y_bottom = iHeight-1; CenterY = (y_bottom-y_top)/2;
+		edge_x = (int)(16 * rw / (x_right-x_left+32)) + 1;
+		edge_y = (int)(16 * rh / (y_bottom-y_top+32)) + 1;
+	} else {
+		ReCalulateShowParam();
+	}
 
 	Invalidate(FALSE);
 }
@@ -923,8 +931,8 @@ void CMVPlayback::ShowMVs(CDC *pDC)
 			for (int i=0; i<t; i++) {
 				DrawMV(pDC, bx*MB_SIZE+8+mbd->vsb[i].cx,
 							by*MB_SIZE+8+mbd->vsb[i].cy,
-							(double)bx*MB_SIZE+8+mbd->vsb[i].vcx,
-							(double)by*MB_SIZE+8+mbd->vsb[i].vcy,
+							(double)bx*MB_SIZE+8+(mbd->vsb[i].vcx*MVScaleFactor),
+							(double)by*MB_SIZE+8+(mbd->vsb[i].vcy*MVScaleFactor),
 							mbd->mode);
 			}
 // the comments code should be deleted later.
@@ -982,6 +990,9 @@ void CMVPlayback::DrawMV(CDC *pDC, int cx, int cy, double vx, double vy, int mod
 	int y1 = toWindowY(cy);
 	int x2 = toWindowX(vx);
 	int y2 = toWindowY(vy);
+	if (y2<0) {
+		y2 = 0;
+	}
 
 	if (mode == I16x16 || mode == I4x4) {
 		CPen bluePen(PS_SOLID, 1, RGB(0, 0, 255) );
@@ -1287,3 +1298,10 @@ void CMVPlayback::MarkIt(MVData *mv)
 	}
 }
 */
+
+void CMVPlayback::MVScale(double f)
+{
+	MVScaleFactor = f;
+
+	Invalidate(FALSE);
+}

@@ -85,6 +85,7 @@ private:
 	int rw, rh, edge_x, edge_y; 
 	double	ZoomFactor;
 	CMBData	*QMB;	// MBs with questionable MV of the current picture
+	double	MVScaleFactor;
 
 	TiXmlDocument	*pMVFile;
 	TiXmlNode	*pXMLFrame;
@@ -125,6 +126,7 @@ private:
 
 // Implementation
 public:
+	void MVScale(double f);
 	void ModifyMV(int bx, int by, CMBData* mbd, int mv_no);
 	void SelectQMB(int x, int y);
 	void NextQMB(void);
