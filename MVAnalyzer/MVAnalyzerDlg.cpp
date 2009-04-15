@@ -296,11 +296,11 @@ void CMVAnalyzerDlg::OpenFileA()
 	// TODO: Add your control notification handler code here
 
 	// get pathname & filename
-	m_playback.SetPathName(sFileNameA);
+	m_playback.SetPathName(sPathName);
 	////AfxMessageBox(sFileNameA, MB_OK);
 
 	CFile *pFile = new CFile();
-	if(!pFile->Open(sFileNameA, CFile::modeRead | CFile::typeBinary | CFile::shareDenyNone )) 
+	if(!pFile->Open(sPathName, CFile::modeRead | CFile::typeBinary | CFile::shareDenyNone )) 
 	{
 		//AfxMessageBox("Can't open input file");
 		delete pFile;
@@ -429,7 +429,6 @@ BOOL CMVAnalyzerDlg::PreTranslateMessage(MSG* pMsg)
 	if (pMsg->message == WM_DROPFILES)
 	{
 //		if (pMsg->hwnd == m_playback) {
-			char sPathName[1024];
 			DragQueryFile(HDROP(pMsg->wParam), 0, sPathName, 128);
 			m_playback.SetPathName(sPathName);
 			m_Reference.SetPathName(sPathName);
@@ -470,6 +469,7 @@ void CMVAnalyzerDlg::OnTimer(UINT nIDEvent)
 			OnPlay();
 			iCurrFrameNumber = 0;
 			SetTitle();
+			iCurrFrameNumber = -1;
 			return;
 		}
 	} else if (nIDEvent == playback_blink_timer) {

@@ -67,6 +67,7 @@ public:
 private:
 	BOOL	bHaveFile;
 	char	sPathName[1024];
+	char	sMVPathName[1024];
 	CFile *	m_pFile;
 	int		iTotalFrameNumber;
 	int		iCurrFrameNumber;
@@ -92,7 +93,7 @@ private:
 	int GetMBtype(const char *s);
 	void ModifyCurrMV(CMBData* mbd, int no, int mv_no, TiXmlNode *mv_node);
 
-	void DrawMV(CDC *pDC, int cx, int cy, double vx, double vy);
+	void DrawMV(CDC *pDC, int cx, int cy, double vx, double vy, int mode);
 //	void MarkIt(MVData *mv); // should be deleted finally.
 //	void CreateOneQMB(int bx, int by); // should be deleted finally.
 	void FindQuestionableMV(void);
