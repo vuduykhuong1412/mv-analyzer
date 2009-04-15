@@ -9,7 +9,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-enum {NRM, QUE, MDF, BKI};
+enum {NRM, QUE, MDF, BKI, SKP};
 typedef struct {
 	int mvx;	// motion vector x
 	int mvy;	// motion vector y
@@ -47,7 +47,7 @@ typedef struct {
 	MVData *mv;
 } MVSubMB;
 
-enum {B16x16, B16x8, B8x16, B8x8, I16x16};
+enum {B16x16, B16x8, B8x16, B8x8, I16x16, I4x4, BSKIP};
 class CMBData  
 {
 public:
