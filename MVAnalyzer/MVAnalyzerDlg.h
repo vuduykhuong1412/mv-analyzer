@@ -35,6 +35,8 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CMVAnalyzerDlg)
 	enum { IDD = IDD_MVANALYZER_DIALOG };
+	CButton	m_fullscreen;
+	CButton	m_MVscale;
 	CStatic	m_static_SADdiff;
 	CStatic	m_static_currBLK;
 	CStatic	m_static_currSAD;
@@ -72,6 +74,7 @@ public:
 	UINT focusarea_blink_timer;	// current MV blink timer;
 	BOOL bPlay;			// play or pause;
 	int  bYUV;		// display Colorful YUV or Y only or U only or V only
+	double MVScaleFactor;	// MV scale factor, x1, x2, x0.5
 	int iCurrFrameNumber;	// current frame number, start from 0, 1, 2, ......
 	char sPathName[1024];
 //	char sFileNameA[128];	// 
@@ -117,6 +120,7 @@ protected:
 	afx_msg void OnSign();
 	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
 	afx_msg void OnFileOpen();
+	afx_msg void OnMVScale();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 private:
