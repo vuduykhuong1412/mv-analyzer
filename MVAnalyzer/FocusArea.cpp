@@ -339,16 +339,18 @@ void CFocusArea::NextMV()
 	// get the total MV number firstly
 	int totalMV = mbd->GetTotalSubMB();
 	// select the next MV with number CurrMV_No.
-	CurrMV_No = (CurrMV_No+1) % totalMV;
-	CurrMV.mvx = qmb->vsb[CurrMV_No].mv->mvx;
-	CurrMV.mvy = qmb->vsb[CurrMV_No].mv->mvy;
-	CurrMV.mark = qmb->vsb[CurrMV_No].mv->mark;
-//	MVData *mv = mbd->vsb[CurrMV_No].mv;
+	if (totalMV > 0) {
+		CurrMV_No = (CurrMV_No+1) % totalMV;
+		CurrMV.mvx = qmb->vsb[CurrMV_No].mv->mvx;
+		CurrMV.mvy = qmb->vsb[CurrMV_No].mv->mvy;
+		CurrMV.mark = qmb->vsb[CurrMV_No].mv->mark;
+	//	MVData *mv = mbd->vsb[CurrMV_No].mv;
 
-	int bx = mbd->bx;
-	int by = mbd->by;
-	pDlg->m_FocusRef.SetSearchArea( &(pDlg->m_Reference), bx, by, 
-									&CurrMV, &(mbd->vsb[CurrMV_No]) );
+		int bx = mbd->bx;
+		int by = mbd->by;
+		pDlg->m_FocusRef.SetSearchArea( &(pDlg->m_Reference), bx, by, 
+										&CurrMV, &(mbd->vsb[CurrMV_No]) );
+	}
 
 /*	int count = -1;
 	switch(mbd->mode) {

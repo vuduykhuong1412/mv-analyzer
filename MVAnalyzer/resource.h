@@ -15,6 +15,7 @@
 #define IDC_PLAYBACK_BB                 1007
 #define IDC_PROGRESS                    1008
 #define IDC_FILE_A_OPEN                 1009
+#define IDC_PLAYBACK_LARGE              1009
 #define IDC_PREV                        1010
 #define IDC_NEXT                        1011
 #define IDC_FRAME_NUM                   1012
