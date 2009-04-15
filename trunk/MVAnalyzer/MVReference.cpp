@@ -179,13 +179,13 @@ void CMVReference::Drag(int x, int y)
 // need to modify, use main window reference is ok.
 void CMVReference::SetPathName(char *pathname)
 {
-	if (bHaveFile) {
-		m_pFile->Close();
-	}
+//	if (bHaveFile) {
+//		m_pFile->Close();
+//	}
 
 	sprintf( sPathName, "%s", pathname );
 
-	bHaveFile = TRUE;
+//	bHaveFile = TRUE;
 }
 
 // need to modify, use main window reference is ok.
@@ -231,8 +231,11 @@ int CMVReference::ReStart()
 	GetClientRectSize();
 	iCurrFrameNumber = -1;
 
-	if ( bHaveFile == FALSE )
-		return 0;
+//	if ( bHaveFile == FALSE )
+//		return 0;
+	if ( bHaveFile ) {
+		m_pFile->Close();
+	}
 
 	if(!m_pFile->Open(sPathName, CFile::modeRead | CFile::typeBinary | CFile::shareDenyNone )) 
 	{
@@ -248,6 +251,8 @@ int CMVReference::ReStart()
 	
 	Invalidate(FALSE);
 
+	bHaveFile = TRUE;
+
 	return iTotalFrameNumber;
 }
 
@@ -260,6 +265,7 @@ void CMVReference::GoToFrame(int number)
 	iCurrFrameNumber = number;
 	if (iCurrFrameNumber >= iTotalFrameNumber-1 || iCurrFrameNumber < 0) {
 		iCurrFrameNumber = -1;
+		Invalidate(FALSE);
 	}
 
 	if (iCurrFrameNumber >=0 && iCurrFrameNumber <= iTotalFrameNumber-1 ) {
@@ -304,8 +310,11 @@ void CMVReference::ShowColorImage(CDC *pDC)
 	CBitmap bmp; bmp.CreateCompatibleBitmap(pDC,rw,rh); MemDC.SelectObject(&bmp);
 
 	DrawBackground(pMemDC);
-	if (iCurrFrameNumber < 0)
+	if (iCurrFrameNumber < 0) {
+		pDC->BitBlt(0, 0, rw, rh, pMemDC, 0, 0, SRCCOPY);
+		MemDC.DeleteDC();  
 		return;
+	}
 
 	int BPP = 24;
 	BmpInfo->bmiHeader.biSize=sizeof(BITMAPINFOHEADER);
@@ -346,8 +355,11 @@ void CMVReference::ShowYImage(CDC *pDC)
 	CBitmap bmp; bmp.CreateCompatibleBitmap(pDC,rw,rh); MemDC.SelectObject(&bmp);
 
 	DrawBackground(pMemDC);
-	if (iCurrFrameNumber < 0)
+	if (iCurrFrameNumber < 0) {
+		pDC->BitBlt(0, 0, rw, rh, pMemDC, 0, 0, SRCCOPY);
+		MemDC.DeleteDC();  
 		return;
+	}
 
 	int BPP = 8;
 	BmpInfo->bmiHeader.biSize=sizeof (BITMAPINFOHEADER);

@@ -278,21 +278,20 @@ void CMVPlayback::SelectQMB(int x, int y)
 // need to modify, use main window reference is ok.
 void CMVPlayback::SetPathName(char *pathname)
 {
-	if (bHaveFile) {
-		m_pFile->Close();
-	}
+//	if (bHaveFile) {
+//		m_pFile->Close();
+//		pMVFile->Clear();
+//		delete pMVFile;
+//	}
 
 	sprintf( sPathName, "%s", pathname );
 
 	// read the MV data file
-	char sMVPathName[1024];
 	int len = strlen(sPathName);
 	strcpy(sMVPathName, sPathName);
 	sMVPathName[len-1] = 0; sMVPathName[len-2] = 'v'; sMVPathName[len-3] = 'm'; 
-	pMVFile = new TiXmlDocument( sMVPathName );
-	pMVFile->LoadFile();
-
-	bHaveFile = TRUE;
+//
+//	bHaveFile = TRUE;
 }
 
 char* CMVPlayback::GetFileName(void)
@@ -343,7 +342,7 @@ void CMVPlayback::SetYUVSize(int width, int height)
 		//AfxMessageBox("Couldn't allocate memory for RGBbuf\n");
 		return;
 	}
-	if ( (QMB=(CMBData *)malloc((iWidth/MB_SIZE)*(iHeight/MB_SIZE)*sizeof(CMBData))) == NULL ) 
+	if ( (QMB=(CMBData *)malloc(((iWidth+8)/MB_SIZE)*((iHeight+8)/MB_SIZE)*sizeof(CMBData))) == NULL ) 
 	{
 		//AfxMessageBox("Couldn't allocate memory for RGBbuf\n");
 		return;
@@ -358,8 +357,13 @@ int CMVPlayback::ReStart()
 	GetClientRectSize();
 	iCurrFrameNumber = 0;
 
-	if ( bHaveFile == FALSE )
-		return 0;
+//	if ( bHaveFile == FALSE )
+//		return 0;
+	if (bHaveFile) {
+		m_pFile->Close();
+		pMVFile->Clear();
+		delete pMVFile;
+	}
 
 	if(!m_pFile->Open(sPathName, CFile::modeRead | CFile::typeBinary | CFile::shareDenyNone )) 
 	{
@@ -367,6 +371,9 @@ int CMVPlayback::ReStart()
 		return 0;
 	}
 	iTotalFrameNumber = m_pFile->GetLength() / (iWidth*iHeight*3/2);
+	pMVFile = new TiXmlDocument( sMVPathName );
+	pMVFile->LoadFile();
+
 	GetYUVData();
 
 	ReCalulateShowParam();
@@ -375,6 +382,8 @@ int CMVPlayback::ReStart()
 	FindQuestionableMV();
 
 	Invalidate(FALSE);
+
+	bHaveFile = TRUE;
 
 	return iTotalFrameNumber;
 }
@@ -458,8 +467,8 @@ void CMVPlayback::ReadMVfromXML(TiXmlNode *pf)
 		for (int bx=0; bx<iWidth/MB_SIZE; bx++) {
 			CMBData* mbd = QMB + by*iWidth/MB_SIZE + bx;
 			mbd->bx = bx; mbd->by = by;
-			mbd->mode = I16x16;
-			mbd->mv.mvx = 0; mbd->mv.mvy = 0; mbd->mv.mark = BKI;
+			mbd->mode = BSKIP;
+			mbd->mv.mvx = 0; mbd->mv.mvy = 0; mbd->mv.mark = SKP;
 		}
 	}
 
@@ -532,11 +541,23 @@ void CMVPlayback::ReadMVfromXML(TiXmlNode *pf)
 				i++;
 			}
 			break;
+		case I16x16:
+			mbd->mv.mvx = 0;
+			mbd->mv.mvy = 0;
+			mbd->mv.mark = BKI;
+			break;
+		case I4x4:
+			for (i=0; i<16; i++) {
+				mbd->mvs[i/4].mvs[i%4].mvx = 0;
+				mbd->mvs[i/4].mvs[i%4].mvy = 0;
+				mbd->mvs[i/4].mvs[i%4].mark = BKI;
+			}
+			break;
 		default:
 			mbd->mv.mvx = 0;
 			mbd->mv.mvy = 0;
 			mbd->mv.mark = BKI;
-			//AfxMessageBox("Unknow Macroblock type", MB_OK);
+			AfxMessageBox("Unknow Macroblock type", MB_OK);
 			break;
 		}
 	}
@@ -553,7 +574,7 @@ int CMVPlayback::GetMBtype(const char *s)
 	if (strcmp(s, "SMB4x8") == 0) return B4x8;
 	if (strcmp(s, "SMB4x4") == 0) return B4x4;
 	if (strcmp(s, "I16MB") == 0) return I16x16;
-	if (strcmp(s, "I4MB") == 0) return I16x16;
+	if (strcmp(s, "I4MB") == 0) return I4x4;
 
 	AfxMessageBox("Unknown Block Type", MB_OK);
 	return -1;
@@ -667,8 +688,11 @@ void CMVPlayback::ShowColorImage(CDC *pDC)
 	CBitmap bmp; bmp.CreateCompatibleBitmap(pDC,rw,rh); MemDC.SelectObject(&bmp);
 
 	DrawBackground(pMemDC);
-	if (iCurrFrameNumber < 0)
+	if (iCurrFrameNumber < 0) {
+		pDC->BitBlt(0, 0, rw, rh, pMemDC, 0, 0, SRCCOPY);
+		MemDC.DeleteDC();  
 		return;
+	}
 
 	int BPP = 24;
 	BmpInfo->bmiHeader.biSize=sizeof(BITMAPINFOHEADER);
@@ -709,8 +733,11 @@ void CMVPlayback::ShowYImage(CDC *pDC)
 	CBitmap bmp; bmp.CreateCompatibleBitmap(pDC,rw,rh); MemDC.SelectObject(&bmp);
 
 	DrawBackground(pMemDC);
-	if (iCurrFrameNumber < 0)
+	if (iCurrFrameNumber < 0) {
+		pDC->BitBlt(0, 0, rw, rh, pMemDC, 0, 0, SRCCOPY);
+		MemDC.DeleteDC();  
 		return;
+	}
 
 	int BPP = 8;
 	BmpInfo->bmiHeader.biSize=sizeof (BITMAPINFOHEADER);
@@ -773,8 +800,11 @@ void CMVPlayback::ShowLGImage(CDC *pDC)
 	CBitmap bmp; bmp.CreateCompatibleBitmap(pDC,rw,rh); MemDC.SelectObject(&bmp);
 
 	DrawBackground(pMemDC);
-	if (iCurrFrameNumber < 0)
+	if (iCurrFrameNumber < 0) {
+		pDC->BitBlt(0, 0, rw, rh, pMemDC, 0, 0, SRCCOPY);
+		MemDC.DeleteDC();  
 		return;
+	}
 
 	int BPP = 8;
 	BmpInfo->bmiHeader.biSize=sizeof (BITMAPINFOHEADER);
@@ -894,7 +924,8 @@ void CMVPlayback::ShowMVs(CDC *pDC)
 				DrawMV(pDC, bx*MB_SIZE+8+mbd->vsb[i].cx,
 							by*MB_SIZE+8+mbd->vsb[i].cy,
 							(double)bx*MB_SIZE+8+mbd->vsb[i].vcx,
-							(double)by*MB_SIZE+8+mbd->vsb[i].vcy);
+							(double)by*MB_SIZE+8+mbd->vsb[i].vcy,
+							mbd->mode);
 			}
 // the comments code should be deleted later.
 /*			switch(mbd->mode) {
@@ -943,7 +974,7 @@ void CMVPlayback::ShowMVs(CDC *pDC)
 }
 
 // draw motion vector
-void CMVPlayback::DrawMV(CDC *pDC, int cx, int cy, double vx, double vy)
+void CMVPlayback::DrawMV(CDC *pDC, int cx, int cy, double vx, double vy, int mode)
 {
 	if (cx<x_left || cx>x_right || cy<y_top || cy>y_bottom)
 		return;
@@ -951,6 +982,19 @@ void CMVPlayback::DrawMV(CDC *pDC, int cx, int cy, double vx, double vy)
 	int y1 = toWindowY(cy);
 	int x2 = toWindowX(vx);
 	int y2 = toWindowY(vy);
+
+	if (mode == I16x16 || mode == I4x4) {
+		CPen bluePen(PS_SOLID, 1, RGB(0, 0, 255) );
+		pDC->SelectObject(&bluePen);
+		pDC->Rectangle(x1-1, y1-1, x1+1, y1+1);
+		return;
+	}
+	if (mode == BSKIP) {
+		CPen greenPen(PS_SOLID, 1, RGB(0, 255, 0) );
+		pDC->SelectObject(&greenPen);
+		pDC->Rectangle(x1-1, y1-1, x1+1, y1+1);
+		return;
+	}
 
 	CPen bluePen(PS_SOLID, 1, RGB(0,0, 255) );
 	pDC->SelectObject(&bluePen);

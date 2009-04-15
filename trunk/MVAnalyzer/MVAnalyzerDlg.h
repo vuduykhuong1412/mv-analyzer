@@ -73,7 +73,8 @@ public:
 	BOOL bPlay;			// play or pause;
 	int  bYUV;		// display Colorful YUV or Y only or U only or V only
 	int iCurrFrameNumber;	// current frame number, start from 0, 1, 2, ......
-	char sFileNameA[128];	// 
+	char sPathName[1024];
+//	char sFileNameA[128];	// 
 //	char sFileNameB[128];	// 
 	int iTotalFrameNumber;	//
 
