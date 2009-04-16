@@ -13,9 +13,9 @@ Class2=CMVAnalyzerDlg
 Class3=CAboutDlg
 
 ResourceCount=4
-Resource1=IDD_ABOUTBOX
+Resource1=IDD_MVANALYZER_DIALOG
 Resource2=IDR_MAINFRAME
-Resource3=IDD_MVANALYZER_DIALOG
+Resource3=IDD_ABOUTBOX
 Resource4=IDD_SETTING
 
 [CLS:CMVAnalyzerApp]
