@@ -22,7 +22,6 @@ CMVPlayback::CMVPlayback()
 {
 	bHaveFile = FALSE;
 	m_pFile = NULL;
-	m_pFile = new CFile();
 
 	iTotalFrameNumber = 0;
 	iCurrFrameNumber = 0;
@@ -63,8 +62,8 @@ CMVPlayback::~CMVPlayback()
 		free(RGBbuf);
 		free(QMB);
 		delete pMVFile;
+		delete m_pFile;
 	}
-	delete m_pFile;
 	delete BmpInfo;
 }
 
@@ -152,7 +151,7 @@ void CMVPlayback::SetShowSign(BOOL sign)
 void CMVPlayback::ZoomIn()
 {
 	GetClientRectSize();
-	double maxZF = iWidth * 4 / rw;
+	double maxZF = (double)(iWidth * 4) / (double)rw;
 
 	ZoomFactor *= 1.1;
 	if (ZoomFactor == maxZF) return;
@@ -384,6 +383,7 @@ int CMVPlayback::ReStart()
 	if (winID != 0) {
 		m_pFile = pDlg->m_playback.m_pFile;
 	} else {
+		m_pFile = new CFile();
 		if(!m_pFile->Open(sPathName, CFile::modeRead | CFile::typeBinary | CFile::shareDenyNone )) {
 			//AfxMessageBox("Can't open input file");
 			return 0;
@@ -490,6 +490,7 @@ void CMVPlayback::ReadMVfromXML(TiXmlNode *pf)
 	for (int by=0; by<iHeight/MB_SIZE; by++) {
 		for (int bx=0; bx<iWidth/MB_SIZE; bx++) {
 			CMBData* mbd = QMB + by*iWidth/MB_SIZE + bx;
+			memset(mbd, 0, sizeof(CMBData));
 			mbd->bx = bx; mbd->by = by;
 			mbd->mode = BSKIP;
 			mbd->mv.mvx = 0; mbd->mv.mvy = 0; mbd->mv.mark = SKP;
@@ -945,10 +946,12 @@ void CMVPlayback::ShowMVs(CDC *pDC)
 			CMBData* mbd = QMB + by*iWidth/MB_SIZE + bx;
 			int t = mbd->GetTotalSubMB();
 			for (int i=0; i<t; i++) {
+				double tx = (double)(mbd->vsb[i].vcx-mbd->vsb[i].cx) * MVScaleFactor;
+				double ty = (double)(mbd->vsb[i].vcy-mbd->vsb[i].cy) * MVScaleFactor;
 				DrawMV(pDC, bx*MB_SIZE+8+mbd->vsb[i].cx,
 							by*MB_SIZE+8+mbd->vsb[i].cy,
-							(double)bx*MB_SIZE+8+(mbd->vsb[i].vcx*MVScaleFactor),
-							(double)by*MB_SIZE+8+(mbd->vsb[i].vcy*MVScaleFactor),
+							(double)bx*MB_SIZE+8+(mbd->vsb[i].cx+tx),
+							(double)by*MB_SIZE+8+(mbd->vsb[i].cy+ty),
 							mbd->mode);
 			}
 // the comments code should be deleted later.
