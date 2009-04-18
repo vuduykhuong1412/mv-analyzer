@@ -261,6 +261,8 @@ double CFocusRef::CalcCurrSAD()
 		}
 	}
 
+	if (CurrVSB.w == 0 || CurrVSB.h == 0)
+		return 0;
 	double sad = (double)currSAD/(CurrVSB.w*CurrVSB.h);
 	char strSAD[16];
 	sprintf(strSAD, "%7.3f", sad);
