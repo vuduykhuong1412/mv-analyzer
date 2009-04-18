@@ -376,6 +376,7 @@ int CMVPlayback::ReStart()
 //		return 0;
 	if (bHaveFile && winID==0) {
 		m_pFile->Close();
+		delete m_pFile;
 		pMVFile->Clear();
 		delete pMVFile;
 	}
@@ -1193,10 +1194,14 @@ void CMVPlayback::FindQuestionableMV()
 	TotalQMB = 0;
 	BOOL bFirst = TRUE;
 
+	QMB_bx = 0; QMB_by = 0;
+	CMBData* mbd = QMB + QMB_by*iWidth/MB_SIZE + QMB_bx;
+	pDlg->m_FocusArea.SetFocusArea(mbd, QMB_bx, QMB_by);
+
 	for (int by=0; by<iHeight/MB_SIZE; by++) {
 		for (int bx=0; bx<iWidth/MB_SIZE; bx++) {
 //			CreateOneQMB(bx, by);
-			CMBData* mbd = QMB + by*iWidth/MB_SIZE + bx;
+			mbd = QMB + by*iWidth/MB_SIZE + bx;
 			int t = mbd->GetTotalSubMB();
 			for (int i=0; i<t; i++) {
 				if ( mbd->vsb[i].mv->mvx > 128 ||
@@ -1207,7 +1212,7 @@ void CMVPlayback::FindQuestionableMV()
 					TotalQMB ++;
 					if (bFirst == TRUE) {
 						QMB_bx = bx; QMB_by = by;
-						pDlg->m_FocusArea.SetFocusArea(mbd, bx, by);
+						pDlg->m_FocusArea.SetFocusArea(mbd, QMB_bx, QMB_by);
 						bFirst = FALSE;
 					}
 				}
