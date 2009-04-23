@@ -43,6 +43,7 @@ private:
 	int rw, rh, edge_x, edge_y; 
 	double ZoomFactor;
 	int RefXleft, RefXright, RefYtop, RefYbottom;
+	double RefBlkXleft, RefBlkXright, RefBlkYtop, RefBlkYbottom;
 
 	void DrawRefArea(CDC *pDC);
 	void DrawBackground(CDC *pDC);
@@ -50,8 +51,8 @@ private:
 	void GetClientRectSize(void);
 	int toPictureY(int y);
 	int toPictureX(int x);
-	int toWindowY(int y);
-	int toWindowX(int x);
+	int toWindowY(double y);
+	int toWindowX(double x);
 	void ShowColorImage(CDC *pDC);
 	void ShowYImage(CDC *pDC);
 	void GetYUVData(void);
@@ -65,7 +66,7 @@ private:
 
 // Implementation
 public:
-	void SetRefArea(int x1, int y1, int x2, int y2);
+	void SetRefArea(int x1, int y1, int x2, int y2, double xb1, double xb2, double yb1, double yb2);
 	void SetColorful(int colorful);
 	void ZoomIn(void);
 	void ZoomOut(void);

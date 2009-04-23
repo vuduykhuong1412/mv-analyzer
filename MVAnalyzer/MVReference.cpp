@@ -37,6 +37,9 @@ CMVReference::CMVReference()
 	CenterX = CenterY = 0;
 	ZoomFactor = 1.0;
 
+	RefXleft = RefXright = RefYtop = RefYbottom = 0;
+	RefBlkXleft = RefBlkXright = RefBlkYtop = RefBlkYbottom = 0;
+
 	BmpInfo=(BITMAPINFO*)new char [sizeof(BITMAPINFO)+sizeof(RGBQUAD)*256];
 }
 
@@ -112,7 +115,7 @@ void CMVReference::SetColorful(int colorful)
 void CMVReference::ZoomIn()
 {
 	GetClientRectSize();
-	double maxZF = iWidth * 4 / rw;
+	double maxZF = (double)(iWidth * 4) / (double)rw;
 
 	ZoomFactor *= 1.1;
 	if (ZoomFactor == maxZF) return;
@@ -128,9 +131,15 @@ void CMVReference::ZoomOut()
 {
 	ZoomFactor /= 1.1;
 	if (ZoomFactor == 1) return;
-	if (ZoomFactor < 1) { ZoomFactor = 1; }
-
-	ReCalulateShowParam();
+	if (ZoomFactor < 1) {
+		ZoomFactor = 1;
+		x_left = 0; x_right = iWidth-1; CenterX = (x_right-x_left)/2;
+		y_top = 0; y_bottom = iHeight-1; CenterY = (y_bottom-y_top)/2;
+		edge_x = (int)(16 * rw / (x_right-x_left+32)) + 1;
+		edge_y = (int)(16 * rh / (y_bottom-y_top+32)) + 1;
+	} else {
+		ReCalulateShowParam();
+	}
 
 	Invalidate(FALSE);
 }
@@ -425,34 +434,45 @@ void CMVReference::DrawRefArea(CDC *pDC)
 	pDC->LineTo(toWindowX(RefXright), toWindowY(RefYbottom));
 	pDC->LineTo(toWindowX(RefXleft), toWindowY(RefYbottom));
 	pDC->LineTo(toWindowX(RefXleft), toWindowY(RefYtop));
+
+	pDC->MoveTo(toWindowX(RefBlkXleft), toWindowY(RefBlkYtop));
+	pDC->LineTo(toWindowX(RefBlkXright), toWindowY(RefBlkYtop));
+	pDC->LineTo(toWindowX(RefBlkXright), toWindowY(RefBlkYbottom));
+	pDC->LineTo(toWindowX(RefBlkXleft), toWindowY(RefBlkYbottom));
+	pDC->LineTo(toWindowX(RefBlkXleft), toWindowY(RefBlkYtop));
 }
 
 // set the Current Reference Rectangle Area
-void CMVReference::SetRefArea(int x1, int y1, int x2, int y2)
+void CMVReference::SetRefArea(int x1, int y1, int x2, int y2, double xb1, double xb2, double yb1, double yb2)
 {
 	RefXleft = x1;
 	RefXright = x2;
 	RefYtop = y1;
 	RefYbottom = y2;
+
+	RefBlkXleft = xb1;
+	RefBlkXright = xb2;
+	RefBlkYtop = yb1;
+	RefBlkYbottom = yb2;
 }
 
 // translate the x pos of the YUV file into the pos of window
-int CMVReference::toWindowX(int x)
+int CMVReference::toWindowX(double x)
 {
 	int xx;
 	GetClientRectSize();
 
-	xx = ( (rw-2*edge_x) * (x-x_left) / (x_right-x_left) ) + edge_x;
+	xx = (int)( (rw-2*edge_x) * (x-x_left) / (x_right-x_left) ) + edge_x;
 	return xx;
 }
 
 // translate the y pos of the YUV file into the pos of window
-int CMVReference::toWindowY(int y)
+int CMVReference::toWindowY(double y)
 {
 	int yy;
 	GetClientRectSize();
 
-	yy = ( (rh-2*edge_y) * (y-y_top) / (y_bottom-y_top) ) + edge_y;
+	yy = (int)( (rh-2*edge_y) * (y-y_top) / (y_bottom-y_top) ) + edge_y;
 	return yy;
 }
 
