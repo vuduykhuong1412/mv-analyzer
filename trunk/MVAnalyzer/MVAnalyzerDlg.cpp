@@ -106,6 +106,7 @@ void CMVAnalyzerDlg::DoDataExchange(CDataExchange* pDX)
 {
 	cdxCSizingDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CMVAnalyzerDlg)
+	DDX_Control(pDX, IDC_SAVE_MVFILE, m_saveMVFile);
 	DDX_Control(pDX, IDC_PLAYBACK_LARGE, m_playback_large);
 	DDX_Control(pDX, IDC_FULL_SCREEN, m_fullscreen);
 	DDX_Control(pDX, IDC_MV_SCALE, m_MVscale);
@@ -168,6 +169,7 @@ BEGIN_MESSAGE_MAP(CMVAnalyzerDlg, cdxCSizingDialog)
 	ON_BN_CLICKED(IDC_FILE_OPEN, OnFileOpen)
 	ON_BN_CLICKED(IDC_MV_SCALE, OnMVScale)
 	ON_BN_CLICKED(IDC_FULL_SCREEN, OnFullScreen)
+	ON_BN_CLICKED(IDC_SAVE_MVFILE, OnSaveMvfile)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -224,6 +226,7 @@ BOOL CMVAnalyzerDlg::OnInitDialog()
 	AddSzControl(m_setting, mdRepos, mdRepos);
 	AddSzControl(m_MVscale, mdRepos, mdRepos);
 	AddSzControl(m_fullscreen, mdRepos, mdRepos);
+	AddSzControl(m_saveMVFile, mdRepos, mdRepos);
 	AddSzControlEx(m_progress, 0, 50, 100, 100);	m_progress.SetRange(0, iTotalFrameNumber-1);
 	AddSzControlEx(m_frame_num, 50, 50, 100, 100);
 
@@ -774,7 +777,7 @@ void CMVAnalyzerDlg::OnFullScreen()
 	// TODO: Add your control notification handler code here
 	if (bFullScreen == FALSE) {
 		bFullScreen = TRUE;
-		m_fullscreen.SetWindowText("N");
+		m_fullscreen.SetWindowText("NS");
 
 		m_playback_large.ShowWindow(SW_SHOWNORMAL);
 		m_playback.ShowWindow(SW_HIDE);
@@ -792,7 +795,7 @@ void CMVAnalyzerDlg::OnFullScreen()
 		m_static_currBLK.ShowWindow(SW_HIDE);
 	} else {
 		bFullScreen = FALSE;
-		m_fullscreen.SetWindowText("F");
+		m_fullscreen.SetWindowText("FS");
 
 		m_playback_large.ShowWindow(SW_HIDE);
 		m_playback.ShowWindow(SW_SHOWNORMAL);
@@ -809,4 +812,10 @@ void CMVAnalyzerDlg::OnFullScreen()
 		m_by.ShowWindow(SW_SHOWNORMAL);
 		m_static_currBLK.ShowWindow(SW_SHOWNORMAL);
 	}
+}
+
+void CMVAnalyzerDlg::OnSaveMvfile() 
+{
+	// TODO: Add your control notification handler code here
+	m_playback.SaveMVFile();
 }
