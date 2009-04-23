@@ -186,7 +186,11 @@ void CFocusRef::SetRefArea(void)
 		(FocusBlockX+SMBX)*MB_SIZE - FOCUS_RANGE,
 		(FocusBlockY+SMBY)*MB_SIZE - FOCUS_RANGE,
 		(FocusBlockX+SMBX)*MB_SIZE + FOCUS_RANGE + MB_SIZE - 1,
-		(FocusBlockY+SMBY)*MB_SIZE + FOCUS_RANGE + MB_SIZE - 1
+		(FocusBlockY+SMBY)*MB_SIZE + FOCUS_RANGE + MB_SIZE - 1,
+		(FocusBlockX)*MB_SIZE + MB_SIZE/2 + CurrVSB.vltx,
+		(FocusBlockX)*MB_SIZE + MB_SIZE/2 + CurrVSB.vrbx,
+		(FocusBlockY)*MB_SIZE + MB_SIZE/2 + CurrVSB.vlty,
+		(FocusBlockY)*MB_SIZE + MB_SIZE/2 + CurrVSB.vrby
 	);
 	pDlg->m_Reference.Invalidate(FALSE);
 
