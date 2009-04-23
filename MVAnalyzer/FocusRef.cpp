@@ -153,7 +153,8 @@ void CFocusRef::SetSearchArea(CMVReference *p, int bx, int by, MVData* mvd, MVSu
 
 	SetRefArea();
 	GetCandidates();
-	CurrCandidate = -1;
+	CurrCandidate = 8;
+	NextCandidate();
 
 	bHave = TRUE;
 }
@@ -268,23 +269,6 @@ double CFocusRef::CalcCurrSAD()
 	sprintf(strSAD, "%7.3f", sad);
 	pDlg->m_currSAD.SetWindowText(strSAD);
 	return sad;
-}
-
-void CFocusRef::ShowFocusBlock(CDC *pDC)
-{
-	HBRUSH hBrush = CreateSolidBrush( RGB(255,255,255) );
-	CPen redPen(PS_SOLID, 1, RGB(255,0, 0) );
-	pDC->SelectObject(&redPen);
-
-	int x1 = FOCUS_RANGE * FOCUS_ZOOM - 1;
-	int x2 = (FOCUS_RANGE + MB_SIZE) * FOCUS_ZOOM;
-	int y1 = FOCUS_RANGE * FOCUS_ZOOM - 1;
-	int y2 = (FOCUS_RANGE + MB_SIZE) * FOCUS_ZOOM;
-	pDC->MoveTo( toWindowX(x1),		toWindowY(y1) );
-	pDC->LineTo( toWindowX(x2),	toWindowY(y1)) ;
-	pDC->LineTo( toWindowX(x2),	toWindowY(y2) );
-	pDC->LineTo( toWindowX(x1),		toWindowY(y2) );
-	pDC->LineTo( toWindowX(x1),		toWindowY(y1) );
 }
 
 // translate the x pos of the YUV file into the pos of window

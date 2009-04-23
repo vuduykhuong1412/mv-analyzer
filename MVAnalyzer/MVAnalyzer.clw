@@ -29,7 +29,7 @@ Type=0
 HeaderFile=MVAnalyzerDlg.h
 ImplementationFile=MVAnalyzerDlg.cpp
 Filter=D
-LastObject=IDC_PLAYBACK_LARGE
+LastObject=IDC_PROGRESS
 BaseClass=cdxCSizingDialog
 VirtualFilter=dWC
 
@@ -38,7 +38,7 @@ Type=0
 HeaderFile=MVAnalyzerDlg.h
 ImplementationFile=MVAnalyzerDlg.cpp
 Filter=D
-LastObject=IDOK
+LastObject=CAboutDlg
 
 [DLG:IDD_ABOUTBOX]
 Type=1

@@ -698,6 +698,7 @@ void CMVAnalyzerDlg::OnLButtonDblClk(UINT nFlags, CPoint point)
 		m_playback_large.QMB_bx = m_playback.QMB_bx;
 		m_playback_large.QMB_by = m_playback.QMB_by;
 	}
+	SetTitle();
 	
 	cdxCSizingDialog::OnLButtonDblClk(nFlags, point);
 }

@@ -76,7 +76,6 @@ private:
 	int toWindowY(int y);
 	int toPictureX(int x);
 	int toPictureY(int y);
-	void ShowFocusBlock(CDC *pDC);
 	void ShowFocusArea(CDC *pDC);
 };
 
