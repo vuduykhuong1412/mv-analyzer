@@ -35,6 +35,7 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CMVAnalyzerDlg)
 	enum { IDD = IDD_MVANALYZER_DIALOG };
+	CButton	m_saveMVFile;
 	CMVPlayback	m_playback_large;
 	CButton	m_fullscreen;
 	CButton	m_MVscale;
@@ -124,6 +125,7 @@ protected:
 	afx_msg void OnFileOpen();
 	afx_msg void OnMVScale();
 	afx_msg void OnFullScreen();
+	afx_msg void OnSaveMvfile();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 private:

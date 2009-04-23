@@ -127,6 +127,7 @@ private:
 
 // Implementation
 public:
+	void SaveMVFile(void);
 	void MVScale(double f);
 	void ModifyMV(int bx, int by, CMBData* mbd, int mv_no);
 	void SelectQMB(int x, int y);

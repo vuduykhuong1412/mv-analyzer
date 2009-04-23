@@ -362,8 +362,10 @@ void CFocusRef::MoveDown(void)
 		temp_SMBY = SMBY;
 	} else if (temp_vlty<=top_y) {
 		temp_SMBY = SMBY - 1;
+		bReCalcCandidate = TRUE;
 	} else if (temp_vrby>bottom_y) {
 		temp_SMBY = SMBY + 1;
+		bReCalcCandidate = TRUE;
 	}
 	if (FocusBlockY+temp_SMBY < pDlg->m_playback.iHeight/MB_SIZE) {
 		CurrMV.mvy += 1;
@@ -398,8 +400,10 @@ void CFocusRef::MoveLeft(void)
 		temp_SMBX = SMBX;
 	} else if (temp_vltx<=left_x) {
 		temp_SMBX = SMBX - 1;
+		bReCalcCandidate = TRUE;
 	} else if (temp_vrbx>right_x) {
 		temp_SMBX = SMBX + 1;
+		bReCalcCandidate = TRUE;
 	}
 	if (FocusBlockX+temp_SMBX >= 0) {
 		CurrMV.mvx -= 1;
@@ -434,8 +438,10 @@ void CFocusRef::MoveRight(void)
 		temp_SMBX = SMBX;
 	} else if (temp_vltx<=left_x) {
 		temp_SMBX = SMBX - 1;
+		bReCalcCandidate = TRUE;
 	} else if (temp_vrbx>right_x) {
 		temp_SMBX = SMBX + 1;
+		bReCalcCandidate = TRUE;
 	}
 	if (FocusBlockX+temp_SMBX < pDlg->m_playback.iWidth/MB_SIZE) {
 		CurrMV.mvx += 1;

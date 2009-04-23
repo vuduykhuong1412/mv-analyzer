@@ -687,14 +687,22 @@ void CMVPlayback::ModifyMV(int bx, int by, CMBData* mbd, int mv_no)
 				ModifyCurrMV(mbd, ++no, mv_no, temp_n->FirstChild( "pre_mv" ));
 				break;
 			}
+			i++;
 		}
 		break;
 	default:
 		break;
 	}
-	pMVFile->SaveFile();
+	//pMVFile->SaveFile();
 
 	Invalidate(FALSE);
+}
+
+void CMVPlayback::SaveMVFile()
+{
+	if (bHaveFile && winID==0) {
+		pMVFile->SaveFile();
+	}
 }
 
 void CMVPlayback::ModifyCurrMV(CMBData *mbd, int no, int mv_no, TiXmlNode *mv_node)
