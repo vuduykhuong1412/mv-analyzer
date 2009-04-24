@@ -252,6 +252,8 @@ void CFocusRef::NextCandidate()
 	sprintf(strSAD, "%7.3f", sad-optSAD);
 	pDlg->m_SADdiff.SetWindowText(strSAD);
 
+	SetRefArea();
+
 	Invalidate(FALSE);
 }
 
