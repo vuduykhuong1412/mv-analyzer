@@ -399,7 +399,7 @@ void CMVReference::ShowYImage(CDC *pDC)
 	
 	//Make the inverse image up-side-down
 	int nNum1,nNum2;
-	for(i=0; i<iHeight; i++) {
+	for(int i=0; i<iHeight; i++) {
 		nNum1 = (iHeight-i-1)*iWidth;
 		nNum2 = i*iWidth;
 		memcpy(lpBuf+nNum1, Y+nNum2, iWidth);

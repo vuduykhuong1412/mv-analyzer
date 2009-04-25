@@ -811,7 +811,7 @@ void CMVPlayback::ShowYImage(CDC *pDC)
 	
 	//Make the inverse image up-side-down
 	int nNum1,nNum2;
-	for(i=0; i<iHeight; i++) {
+	for(int i=0; i<iHeight; i++) {
 		nNum1 = (iHeight-i-1)*iWidth;
 		nNum2 = i*iWidth;
 		memcpy(lpBuf+nNum1, Y+nNum2, iWidth);
@@ -879,7 +879,7 @@ void CMVPlayback::ShowLGImage(CDC *pDC)
 	//Make the inverse image up-side-down
 	BYTE *p = lpBuf;
 	unsigned char *y;
-	for(i=0; i<iHeight; i++) {
+	for(int i=0; i<iHeight; i++) {
 		y = Y + ((iHeight-i-1)*iWidth);
 		for (int j=0; j<iWidth; j++) {
 			*p = 255 - (255-(unsigned char)(*y)) / 3;
