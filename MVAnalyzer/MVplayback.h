@@ -53,6 +53,7 @@ public:
 	
 // Operations
 public:
+	BOOL	bChanged;
 	int		winID;
 	int		TotalQMB, QMB_bx, QMB_by;
 	int		bBlink;
