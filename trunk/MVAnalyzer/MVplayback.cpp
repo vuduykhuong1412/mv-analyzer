@@ -50,6 +50,8 @@ CMVPlayback::CMVPlayback()
 	bBlink = 1;
 	pMVFile = NULL;
 
+	bChanged = FALSE;
+
 	MVScaleFactor = 1.0;
 }
 
@@ -374,6 +376,8 @@ int CMVPlayback::ReStart()
 
 //	if ( bHaveFile == FALSE )
 //		return 0;
+	SaveMVFile();
+
 	if (bHaveFile && winID==0) {
 		m_pFile->Close();
 		delete m_pFile;
@@ -419,6 +423,8 @@ void CMVPlayback::GoToFrame(int number)
 	if ( bHaveFile == FALSE )
 		return;
 
+	SaveMVFile();
+
 	iCurrFrameNumber = number;
 	if (iCurrFrameNumber >= iTotalFrameNumber || iCurrFrameNumber < 0) {
 		iCurrFrameNumber = -1;
@@ -431,6 +437,8 @@ void CMVPlayback::GoToFrame(int number)
 		FindQuestionableMV();
 		Invalidate(FALSE);
 	}
+
+	bChanged = FALSE;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -694,13 +702,14 @@ void CMVPlayback::ModifyMV(int bx, int by, CMBData* mbd, int mv_no)
 		break;
 	}
 	//pMVFile->SaveFile();
+	bChanged = TRUE;
 
 	Invalidate(FALSE);
 }
 
 void CMVPlayback::SaveMVFile()
 {
-	if (bHaveFile && winID==0) {
+	if (bHaveFile && winID==0 && bChanged) {
 		pMVFile->SaveFile();
 	}
 }

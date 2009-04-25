@@ -306,6 +306,8 @@ void CMVAnalyzerDlg::OnClose()
 	// TODO: Add your message handler code here and/or call default
 	StoreWindowPosition(CString(_T("Main\\Window")));
 
+	m_playback.SaveMVFile();
+
 	cdxCSizingDialog::OnClose();
 }
 
