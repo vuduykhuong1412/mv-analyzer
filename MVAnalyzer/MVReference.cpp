@@ -370,7 +370,7 @@ void CMVReference::ShowYImage(CDC *pDC)
 		return;
 	}
 
-	int BPP = 8;
+	int i, BPP = 8;
 	BmpInfo->bmiHeader.biSize=sizeof (BITMAPINFOHEADER);
 	BmpInfo->bmiHeader.biWidth=iWidth;
 	BmpInfo->bmiHeader.biHeight=iHeight;			// negative means up-to-bottom 
@@ -386,7 +386,7 @@ void CMVReference::ShowYImage(CDC *pDC)
 	// convert the YUV pictuer(Y,Cb,Cr) into Gray picture(RGBbuf)
 	HANDLE hloc1 = LocalAlloc(LMEM_ZEROINIT | LMEM_MOVEABLE,(sizeof(RGBQUAD) * 256));
 	RGBQUAD *argbq = (RGBQUAD *) LocalLock(hloc1);
-	for(int i=0; i<256; i++) {
+	for(i=0; i<256; i++) {
 		argbq[i].rgbBlue = argbq[i].rgbGreen = argbq[i].rgbRed = i;
 		argbq[i].rgbReserved = 0;
 	}
@@ -399,7 +399,7 @@ void CMVReference::ShowYImage(CDC *pDC)
 	
 	//Make the inverse image up-side-down
 	int nNum1,nNum2;
-	for(int i=0; i<iHeight; i++) {
+	for(i=0; i<iHeight; i++) {
 		nNum1 = (iHeight-i-1)*iWidth;
 		nNum2 = i*iWidth;
 		memcpy(lpBuf+nNum1, Y+nNum2, iWidth);
