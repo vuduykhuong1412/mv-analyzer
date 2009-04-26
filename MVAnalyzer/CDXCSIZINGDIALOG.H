@@ -290,7 +290,8 @@ class cdxCSizingPropSheet : public CPropertySheet
 {
 	DECLARE_DYNAMIC(cdxCSizingPropSheet)
 
-private:
+public:		// modified by b1gm0use: change "private" to "public", it may bring up some risk here.
+
 	struct StandardControls
 	{
 		UINT							id;	// ID
