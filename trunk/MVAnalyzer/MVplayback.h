@@ -54,6 +54,7 @@ public:
 // Operations
 public:
 	BOOL	bChanged;
+	BOOL	bHaveMV;
 	int		winID;
 	int		TotalQMB, QMB_bx, QMB_by;
 	int		bBlink;

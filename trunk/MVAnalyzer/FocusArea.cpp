@@ -163,14 +163,16 @@ void CFocusArea::ShowFocusBlock(CDC *pDC)
 					x1+mbd->vsb[i].rbx, y1+mbd->vsb[i].rby, mbd->vsb[i].mark);
 //		DrawArrow(pDC, x1+mbd->vsb[i].cx, y1+mbd->vsb[i].cy,
 //					x1+mbd->vsb[i].vcx, y1+mbd->vsb[i].vcy, mbd->vsb[i].mark);
-		if (i==CurrMV_No) {
-			DrawArrow(pDC, x1+mbd->vsb[i].cx, y1+mbd->vsb[i].cy,
-					x1+mbd->vsb[i].cx+(double)CurrMV.mvx/4,
-					y1+mbd->vsb[i].cy+(double)CurrMV.mvy/4,
-					(bBlink ? QUE : NRM));
-		} else {
-			DrawArrow(pDC, x1+mbd->vsb[i].cx, y1+mbd->vsb[i].cy,
-					x1+mbd->vsb[i].vcx, y1+mbd->vsb[i].vcy, mbd->vsb[i].mark);
+		if ( pDlg->m_playback.bHaveMV ) {
+			if ( i==CurrMV_No) {
+				DrawArrow(pDC, x1+mbd->vsb[i].cx, y1+mbd->vsb[i].cy,
+						x1+mbd->vsb[i].cx+(double)CurrMV.mvx/4,
+						y1+mbd->vsb[i].cy+(double)CurrMV.mvy/4,
+						(bBlink ? QUE : NRM));
+			} else {
+				DrawArrow(pDC, x1+mbd->vsb[i].cx, y1+mbd->vsb[i].cy,
+						x1+mbd->vsb[i].vcx, y1+mbd->vsb[i].vcy, mbd->vsb[i].mark);
+			}
 		}
 	}
 // the comments code should be deleted later.
