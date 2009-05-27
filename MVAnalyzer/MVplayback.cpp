@@ -53,6 +53,8 @@ CMVPlayback::CMVPlayback()
 	bChanged = FALSE;
 
 	MVScaleFactor = 1.0;
+
+	bHaveMV = FALSE;
 }
 
 CMVPlayback::~CMVPlayback()
@@ -401,6 +403,16 @@ int CMVPlayback::ReStart()
 	} else {
 		pMVFile = new TiXmlDocument( sMVPathName );
 		pMVFile->LoadFile();
+		if ( pMVFile->Error() ) {
+			bHaveMV = FALSE;
+			pDlg->m_bMV.EnableWindow(FALSE);
+			pDlg->m_sign.EnableWindow(FALSE);
+			SetShowMV( FALSE );
+		} else {
+			bHaveMV = TRUE;
+			pDlg->m_bMV.EnableWindow(TRUE);
+			pDlg->m_sign.EnableWindow(TRUE);
+		}
 	}
 
 	GetYUVData();
@@ -473,17 +485,19 @@ void CMVPlayback::GetYUVData()
 	}
 
 	// read the MV info from the file
-	TiXmlNode* fileNode = pMVFile->FirstChild( "file" );
-	TiXmlNode* node = NULL;
-	while( node = fileNode->IterateChildren( "frame", node ) ) {
-		TiXmlElement* frm = node->ToElement();
-		int frame_no;
-		frm->QueryIntAttribute( "no", &frame_no );
-		const char *type = frm->Attribute( "type" );
-		if (frame_no == iCurrFrameNumber && strcmp(type, "P_SLICE") == 0) {
-			pXMLFrame = node;
-			ReadMVfromXML(pXMLFrame);
-			break;
+	if ( bHaveMV ) {
+		TiXmlNode* fileNode = pMVFile->FirstChild( "file" );
+		TiXmlNode* node = NULL;
+		while( node = fileNode->IterateChildren( "frame", node ) ) {
+			TiXmlElement* frm = node->ToElement();
+			int frame_no;
+			frm->QueryIntAttribute( "no", &frame_no );
+			const char *type = frm->Attribute( "type" );
+			if (frame_no == iCurrFrameNumber && strcmp(type, "P_SLICE") == 0) {
+				pXMLFrame = node;
+				ReadMVfromXML(pXMLFrame);
+				break;
+			}
 		}
 	}
 }
